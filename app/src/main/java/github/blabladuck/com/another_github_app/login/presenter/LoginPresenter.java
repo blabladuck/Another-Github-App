@@ -1,6 +1,7 @@
 package github.blabladuck.com.another_github_app.login.presenter;
 
 import buisness.IGithubBusinessInterface;
+import buisness.models.User;
 
 /**
  * Created by Sanjeev on 27/12/15.
@@ -20,9 +21,9 @@ public class LoginPresenter implements LoginContract.UserAction {
     public void attemptLogin(String username, String password) {
         if(isEmailValid(username) && isPasswordValid(password)){
             view.toggleProgressbar(true);
-            gitbuisness.login(username, password, new IGithubBusinessInterface.LoginCallback() {
+            gitbuisness.login(username, password, new IGithubBusinessInterface.LoginCallback () {
                 @Override
-                public void onLoginSuccess() {
+                public void onLoginSuccess(User user) {
                     view.toggleProgressbar(false);
                 }
 

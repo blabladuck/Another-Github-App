@@ -1,11 +1,13 @@
 package buisness;
 
+import buisness.models.User;
+
 /**
  * Created by Sanjeev on 27/12/15.
  */
 public interface IGithubBusinessInterface {
     interface LoginCallback {
-        void onLoginSuccess();
+        void onLoginSuccess(User user);
 
         void onLoginFailure();
     }

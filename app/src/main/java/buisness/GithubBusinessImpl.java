@@ -1,7 +1,7 @@
 package buisness;
 
 
-import android.os.Handler;
+import buisness.models.User;
 
 /**
  * Created by Sanjeev on 27/12/15.
@@ -16,10 +16,10 @@ public class GithubBusinessImpl implements IGithubBusinessInterface {
 
     @Override
     public void login(String username, String password, final LoginCallback callback) {
-        Api.login(username, password, new GithubServiceApi.onServiceComplete() {
+        Api.login(username, password, new GithubServiceApi.onServiceComplete<User>() {
             @Override
-            public void onSuccess() {
-                callback.onLoginSuccess();
+            public void onSuccess(User user) {
+                callback.onLoginSuccess(user);
             }
 
             @Override
