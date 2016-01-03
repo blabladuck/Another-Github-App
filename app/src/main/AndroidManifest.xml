@@ -3,7 +3,7 @@
     package="github.blabladuck.com.another_github_app">
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="false"
@@ -20,6 +20,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".login.ui.HomeActivity"
+            android:theme="@style/AppTheme.OverlapSystemBar" />
     </application>
 
 </manifest>
