@@ -1,6 +1,10 @@
 package github.blabladuck.com.another_github_app.login.presenter;
 
+import android.util.Log;
+
 import buisness.IGithubBusinessInterface;
+import buisness.LoginStorage;
+import service.User;
 
 /**
  * Created by Sanjeev on 27/12/15.
@@ -8,22 +12,28 @@ import buisness.IGithubBusinessInterface;
 public class LoginPresenter implements LoginContract.UserAction {
 
 
-    private final LoginContract.View view;
+    private static final String TAG = "LoginPresenter";
+    private final LoginContract.LoginView view;
     private final IGithubBusinessInterface gitbuisness;
 
-    public LoginPresenter(LoginContract.View view, IGithubBusinessInterface gitbuisness) {
+    public LoginPresenter(LoginContract.LoginView view, IGithubBusinessInterface gitbuisness) {
         this.view = view;
         this.gitbuisness = gitbuisness;
     }
 
     @Override
-    public void attemptLogin(String username, String password) {
-        if(isEmailValid(username) && isPasswordValid(password)){
+    public void attemptLogin(String domain, final String username, String password) {
+        if (isDomainValid(domain) && isEmailValid(username) && isPasswordValid(password)) {
             view.toggleProgressbar(true);
-            gitbuisness.login(username, password, new IGithubBusinessInterface.LoginCallback() {
+            gitbuisness.login(domain, username, password, new IGithubBusinessInterface.LoginCallback() {
                 @Override
-                public void onLoginSuccess() {
+                public void onLoginSuccess(User user) {
+                    LoginStorage storage = gitbuisness.getLoginStorage();
+                    storage.setUsername(user.getName());
+                    storage.setAvatar(user.getAvatarUrl());
+                    Log.d(TAG, user.getAvatarUrl());
                     view.toggleProgressbar(false);
+                    view.navigateToHomeScreen(user);
                 }
 
                 @Override
@@ -34,17 +44,21 @@ public class LoginPresenter implements LoginContract.UserAction {
         }
     }
 
-    @LoginContract.View.InvalidUsernameCode
+    private boolean isDomainValid(String domain) {
+        if (domain == null || domain.isEmpty()) {
+            view.showDomainError(LoginContract.LoginView.DOMAIN_EMPTY);
+            return false;
+        }
+        return true;
+    }
+
+    @LoginContract.LoginView.InvalidUsernameCode
     private boolean isEmailValid(String email) {
         boolean result = true;
-        if (email == null && email.isEmpty()) {
-            view.showUsernameError(LoginContract.View.USERNAME_EMPTY);
-            result = false;
-        } else if (!email.contains("@") || !email.contains(".")) {
-            view.showUsernameError(LoginContract.View.USERNAME_INVALID);
+        if (email == null || email.isEmpty()) {
+            view.showUsernameError(LoginContract.LoginView.USERNAME_EMPTY);
             result = false;
         }
-
         return result;
     }
 
@@ -52,7 +66,7 @@ public class LoginPresenter implements LoginContract.UserAction {
         boolean result = true;
         if (password.length() < 4) {
             result = false;
-            view.showPasswordError(LoginContract.View.PASSWORD_INVALID);
+            view.showPasswordError(LoginContract.LoginView.PASSWORD_INVALID);
         }
         return result;
     }
