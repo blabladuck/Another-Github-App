@@ -2,9 +2,9 @@ package business.service;
 
 import android.content.Context;
 
-import business.services.login.LoginSvcImpl;
-import business.services.login.LoginSvcInterface;
-import service.VolleyDelegate;
+import com.nosleep.githubclient.datalayer.services.LoginSvcImpl;
+import com.nosleep.githubclient.datalayer.services.LoginSvcInterface;
+import com.nosleep.githubclient.utils.VolleyDelegate;
 
 /**
  * Created by Sanjeev on 03/01/16.

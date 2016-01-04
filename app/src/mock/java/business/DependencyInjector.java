@@ -1,6 +1,6 @@
 package business;
 
-import android.content.Context;
+import com.nosleep.githubclient.login.business.OAuthBusiness;
 
 import business.service.ServiceInjector;
 import business.services.login.GithubServiceImpl;
