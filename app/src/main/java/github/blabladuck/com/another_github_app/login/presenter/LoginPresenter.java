@@ -22,11 +22,13 @@ public class LoginPresenter implements LoginContract.UserAction {
 
 
     @Override
-    public void checkUserSessionAvailability() {
+    public boolean checkUserSessionAvailability() {
         OAuthBusiness.Access access = oAuthBusiness.getUserAccessCache();
-        if(access!=null){
-            view.showWelcomeScreen(access.username,access.token);
+        if (access != null) {
+            view.showWelcomeScreen(access.username, access.token);
+            return true;
         }
+        return false;
     }
 
     @Override

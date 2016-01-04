@@ -58,8 +58,10 @@ public interface LoginContract {
 
     interface UserAction {
 
-        void checkUserSessionAvailability();
+        boolean checkUserSessionAvailability();
 
         void attemptLogin(String domain, String username, String password);
+
+
     }
 }

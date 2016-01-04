@@ -49,6 +49,9 @@ public class LoginActivity extends MasterTemplateActivity implements LoginContra
         StorageInjector storageInjector = new StorageInjector(getApplicationContext());
         DependencyInjector injector = new DependencyInjector(serviceInjector, storageInjector);
         userAction = new LoginPresenter(this, injector.getOAuthBusiness());
+        if (!userAction.checkUserSessionAvailability()) {
+            showLoginScreen();
+        }
     }
 
 
