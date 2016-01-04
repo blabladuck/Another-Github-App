@@ -25,7 +25,7 @@ public class LoginPresenter implements LoginContract.UserAction {
     public void checkUserSessionAvailability() {
         OAuthBusiness.Access access = oAuthBusiness.getUserAccessCache();
         if(access!=null){
-            view.showWelcomeScreen(access.username,access.token,access.token);
+            view.showWelcomeScreen(access.username,access.token);
         }
     }
 
