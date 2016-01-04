@@ -24,6 +24,7 @@ public class WelcomeUserFragment extends Fragment {
 
     public static final String EXTRA_AVATAR_URL = "EXTRA_AVATAR_URL";
     public static final String EXTRA_USER_NAME = "EXTRA_USER_NAME";
+    public static final String EXTRA_TOKEN = "EXTRA_TOKEN";
 
     public static final WelcomeUserFragment newInstance(@Nullable Bundle args) {
         WelcomeUserFragment frag = new WelcomeUserFragment();

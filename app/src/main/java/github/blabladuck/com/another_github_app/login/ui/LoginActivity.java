@@ -2,7 +2,6 @@ package github.blabladuck.com.another_github_app.login.ui;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
-import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
@@ -11,13 +10,8 @@ import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
-import android.support.v4.app.Fragment;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.inputmethod.InputMethodManager;
 
 import android.widget.Button;
@@ -25,13 +19,13 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 
 
-import buisness.DependencyInjector;
-import buisness.IGithubBusinessInterface;
-import buisness.LoginStorage;
+import business.DependencyInjector;
+import business.OAuthBusiness;
+import business.service.ServiceInjector;
+import business.storage.StorageInjector;
 import github.blabladuck.com.another_github_app.R;
 import github.blabladuck.com.another_github_app.login.presenter.LoginContract;
 import github.blabladuck.com.another_github_app.login.presenter.LoginPresenter;
-import service.User;
 
 
 public class LoginActivity extends MasterTemplateActivity implements LoginContract.LoginView {
@@ -44,53 +38,17 @@ public class LoginActivity extends MasterTemplateActivity implements LoginContra
     private ProgressBar progressBar;
     private View mLoginFormView;
     private boolean isLoginInProgress;
-    LoginContract.UserAction userAction;
+    private LoginContract.UserAction userAction;
     private static final String SAVED_KEY_LOGIN_PROGRESS = "isLoginInProgress";
 
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        IGithubBusinessInterface businessInterface = DependencyInjector.getGithubBusinessInterface(getApplicationContext());
-        LoginStorage storage = businessInterface.getLoginStorage();
-        Fragment frag;
-        if (storage.getUsername().isEmpty() && storage.getAvatar().isEmpty()) {
-            setContentView(R.layout.activity_login);
-            userAction = new LoginPresenter(this, DependencyInjector.getGithubBusinessInterface(getApplicationContext()));
-            domainTILayout = (TextInputLayout) findViewById(R.id.domainTILayout);
-            domainTILayout.setErrorEnabled(true);
-            emailTILayout = (TextInputLayout) findViewById(R.id.emailTILayout);
-            emailTILayout.setErrorEnabled(true);
-            passwordTILayout = (TextInputLayout) findViewById(R.id.passwordTILayout);
-            passwordTILayout.setErrorEnabled(true);
-            etEmail = (EditText) findViewById(R.id.email);
-            etPassword = (EditText) findViewById(R.id.password);
-            etDomain = (EditText) findViewById(R.id.domain);
-            mLoginFormView = findViewById(R.id.login_form);
-            progressBar = (ProgressBar) findViewById(R.id.login_progress);
-
-            Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
-            mEmailSignInButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (checkConnectivity()) {
-                        attemptLogin();
-                    }
-                }
-            });
-            if (savedInstanceState != null) {
-                isLoginInProgress = savedInstanceState.getBoolean(SAVED_KEY_LOGIN_PROGRESS);
-                toggleProgressbar(isLoginInProgress);
-            }
-        } else {
-            Bundle bundle = new Bundle();
-            bundle.putString(WelcomeUserFragment.EXTRA_USER_NAME, storage.getUsername());
-            bundle.putString(WelcomeUserFragment.EXTRA_AVATAR_URL, storage.getAvatar());
-            //bundle.putString(WelcomeUserFragment.EXTRA_REPOS_URL, storage.getAvatar());
-            frag = WelcomeUserFragment.newInstance(bundle);
-            getSupportFragmentManager().beginTransaction().replace(android.R.id.content, frag).commit();
-        }
-
+        ServiceInjector serviceInjector = new ServiceInjector(getApplicationContext());
+        StorageInjector storageInjector = new StorageInjector(getApplicationContext());
+        DependencyInjector injector = new DependencyInjector(serviceInjector, storageInjector);
+        userAction = new LoginPresenter(this, injector.getOAuthBusiness());
     }
 
 
@@ -133,14 +91,50 @@ public class LoginActivity extends MasterTemplateActivity implements LoginContra
     }
 
     @Override
-    public void navigateToHomeScreen(User user) {
+    public void navigateToHomeScreen(OAuthBusiness.Access access) {
 
-        Intent intent = new Intent(this, HomeActivity.class);
+        /*Intent intent = new Intent(this, HomeActivity.class);
         intent.putExtra("avatar_url", user.getAvatarUrl());
         intent.putExtra("username", user.getName());
         intent.putExtra("myrepos", user.getReposUrl());
-        startActivity(intent);
+        startActivity(intent);*/
         finish();
+    }
+
+    @Override
+    public void showLoginScreen() {
+        setContentView(R.layout.activity_login);
+        domainTILayout = (TextInputLayout) findViewById(R.id.domainTILayout);
+        domainTILayout.setErrorEnabled(true);
+        emailTILayout = (TextInputLayout) findViewById(R.id.emailTILayout);
+        emailTILayout.setErrorEnabled(true);
+        passwordTILayout = (TextInputLayout) findViewById(R.id.passwordTILayout);
+        passwordTILayout.setErrorEnabled(true);
+        etEmail = (EditText) findViewById(R.id.email);
+        etPassword = (EditText) findViewById(R.id.password);
+        etDomain = (EditText) findViewById(R.id.domain);
+        mLoginFormView = findViewById(R.id.login_form);
+        progressBar = (ProgressBar) findViewById(R.id.login_progress);
+
+        Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
+        mEmailSignInButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (checkConnectivity()) {
+                    attemptLogin();
+                }
+            }
+        });
+
+    }
+
+    @Override
+    public void showWelcomeScreen(String username, String token) {
+        Bundle bundle = new Bundle();
+        bundle.putString(WelcomeUserFragment.EXTRA_USER_NAME, username);
+        bundle.putString(WelcomeUserFragment.EXTRA_TOKEN, token);
+        getSupportFragmentManager().beginTransaction().replace(android.R.id.content, WelcomeUserFragment.newInstance(bundle)).
+                commit();
     }
 
     @Override
@@ -195,5 +189,9 @@ public class LoginActivity extends MasterTemplateActivity implements LoginContra
 
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
 }
 

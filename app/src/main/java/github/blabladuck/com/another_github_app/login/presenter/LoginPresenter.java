@@ -1,10 +1,8 @@
 package github.blabladuck.com.another_github_app.login.presenter;
 
-import android.util.Log;
+import android.os.Bundle;
 
-import buisness.IGithubBusinessInterface;
-import buisness.LoginStorage;
-import service.User;
+import business.OAuthBusiness;
 
 /**
  * Created by Sanjeev on 27/12/15.
@@ -14,26 +12,33 @@ public class LoginPresenter implements LoginContract.UserAction {
 
     private static final String TAG = "LoginPresenter";
     private final LoginContract.LoginView view;
-    private final IGithubBusinessInterface gitbuisness;
+    private final OAuthBusiness oAuthBusiness;
+    private OAuthBusiness.Access accessPojo;
 
-    public LoginPresenter(LoginContract.LoginView view, IGithubBusinessInterface gitbuisness) {
+    public LoginPresenter(LoginContract.LoginView view, OAuthBusiness oAuthBusiness) {
         this.view = view;
-        this.gitbuisness = gitbuisness;
+        this.oAuthBusiness = oAuthBusiness;
+    }
+
+
+    @Override
+    public void checkUserSessionAvailability() {
+        OAuthBusiness.Access access = oAuthBusiness.getUserAccessCache();
+        if(access!=null){
+            view.showWelcomeScreen(access.username,access.token,access.token);
+        }
     }
 
     @Override
     public void attemptLogin(String domain, final String username, String password) {
         if (isDomainValid(domain) && isEmailValid(username) && isPasswordValid(password)) {
             view.toggleProgressbar(true);
-            gitbuisness.login(domain, username, password, new IGithubBusinessInterface.LoginCallback() {
+            oAuthBusiness.login(domain, username, password, new OAuthBusiness.LoginCallback() {
+
                 @Override
-                public void onLoginSuccess(User user) {
-                    LoginStorage storage = gitbuisness.getLoginStorage();
-                    storage.setUsername(user.getName());
-                    storage.setAvatar(user.getAvatarUrl());
-                    Log.d(TAG, user.getAvatarUrl());
+                public void onLoginSuccess(OAuthBusiness.Access access) {
                     view.toggleProgressbar(false);
-                    view.navigateToHomeScreen(user);
+                    view.navigateToHomeScreen(access);
                 }
 
                 @Override
