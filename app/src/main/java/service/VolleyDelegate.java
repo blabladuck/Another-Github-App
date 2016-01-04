@@ -14,10 +14,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.ImageLoader;
-import com.android.volley.toolbox.JsonRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 
 import java.io.UnsupportedEncodingException;
@@ -28,14 +26,14 @@ import java.util.Set;
 /**
  * Created by ssub3 on 12/29/15.
  */
-public class VolleyDelegator {
-    private static final String TAG = "VolleyDelegator";
-    private static VolleyDelegator mInstance;
+public class VolleyDelegate {
+    private static final String TAG = "VolleyDelegate";
+    private static VolleyDelegate mInstance;
     private RequestQueue mRequestQueue;
     private ImageLoader mImageLoader;
     private static Context mCtx;
 
-    private VolleyDelegator(Context context) {
+    private VolleyDelegate(Context context) {
         mCtx = context;
         mRequestQueue = getRequestQueue();
 
@@ -56,9 +54,9 @@ public class VolleyDelegator {
                 });
     }
 
-    public static synchronized VolleyDelegator getInstance(Context context) {
+    public static synchronized VolleyDelegate getInstance(Context context) {
         if (mInstance == null) {
-            mInstance = new VolleyDelegator(context);
+            mInstance = new VolleyDelegate(context);
         }
         return mInstance;
     }
@@ -152,14 +150,14 @@ public class VolleyDelegator {
                                 response.data,
                                 HttpHeaderParser.parseCharset(response.headers));
                         Gson gson = new Gson();
-                        Log.d(VolleyDelegator.TAG,"<--------"+response.statusCode);
+                        Log.d(VolleyDelegate.TAG,"<--------"+response.statusCode);
                         Set<String> keyset = response.headers.keySet();
-                        Log.d(VolleyDelegator.TAG, "**********************");
+                        Log.d(VolleyDelegate.TAG, "**********************");
                         for (String str : keyset) {
-                            Log.d(VolleyDelegator.TAG, str + " = " + response.headers.get(str));
+                            Log.d(VolleyDelegate.TAG, str + " = " + response.headers.get(str));
                         }
-                        Log.d(VolleyDelegator.TAG, json);
-                        Log.d(VolleyDelegator.TAG, "**********************");
+                        Log.d(VolleyDelegate.TAG, json);
+                        Log.d(VolleyDelegate.TAG, "**********************");
                         return Response.success(
                                 gson.fromJson(json, clazz),
                                 HttpHeaderParser.parseCacheHeaders(response));

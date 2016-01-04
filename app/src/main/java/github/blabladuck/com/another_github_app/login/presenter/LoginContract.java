@@ -1,12 +1,13 @@
 package github.blabladuck.com.another_github_app.login.presenter;
 
-import android.content.Context;
+import android.os.Bundle;
 import android.support.annotation.IntDef;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
-import service.User;
+import business.OAuthBusiness;
+import business.services.user.User;
 
 /**
  * Created by Sanjeev on 27/12/15.
@@ -14,9 +15,8 @@ import service.User;
 public interface LoginContract {
 
 
-
-    interface LoginView{
-        void navigateToHomeScreen(User user);
+    interface LoginView {
+        void navigateToHomeScreen(OAuthBusiness.Access access);
 
         @IntDef({USERNAME_EMPTY, USERNAME_INVALID, VALID})
         @Retention(RetentionPolicy.SOURCE)
@@ -42,6 +42,10 @@ public interface LoginContract {
 
         public static final int PASSWORD_INVALID = -1;
 
+        void showLoginScreen();
+
+        void showWelcomeScreen(String username, String token);
+
         void showUsernameError(@InvalidUsernameCode int errorcode);
 
         void showPasswordError(@InvalidPasswordCode int errorcode);
@@ -53,6 +57,9 @@ public interface LoginContract {
     }
 
     interface UserAction {
+
+        void checkUserSessionAvailability();
+
         void attemptLogin(String domain, String username, String password);
     }
 }
