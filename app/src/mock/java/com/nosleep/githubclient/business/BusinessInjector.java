@@ -13,7 +13,7 @@ public class BusinessInjector {
     private StorageInjector storageInjector;
     private static BusinessInjector instance;
     private OAuthBusiness oAuthBusiness;
-    private UserProfileBusiness userProfileBusiness;
+    private UserProfile userProfile;
     private MyRepos myRepos;
 
 
@@ -31,21 +31,21 @@ public class BusinessInjector {
 
     public OAuthBusiness getOAuthBusiness() {
         if (oAuthBusiness == null) {
-            oAuthBusiness = new OAuthBusinessImpl(serviceInjector.getLoginSvcInterface(), storageInjector.getMemoryStorage(), storageInjector.getPreferenceStorage());
+            oAuthBusiness = new OAuthBusiness.OAuthBusinessImpl(serviceInjector.getLoginSvcInterface(), storageInjector.getMemoryStorage(), storageInjector.getPreferenceStorage());
         }
         return oAuthBusiness;
     }
 
-    public UserProfileBusiness getUserProfileBusiness() {
-        if (userProfileBusiness == null) {
-            userProfileBusiness = new UserProfileBusinessImpl(serviceInjector.getUserSvcInterface(), storageInjector.getMemoryStorage(), storageInjector.getPreferenceStorage());
+    public UserProfile getUserProfile() {
+        if (userProfile == null) {
+            userProfile = new UserProfile.UserProfileImpl(serviceInjector.getUserSvcInterface(), storageInjector.getMemoryStorage(), storageInjector.getPreferenceStorage());
         }
-        return userProfileBusiness
+        return userProfile
     }
 
     public MyRepos getReposBusiness() {
         if (myRepos == null) {
-            myRepos = new MyReposImpl(serviceInjector.getRepoSvcInterface(), storageInjector.getMemoryStorage(), storageInjector.getPreferenceStorage());
+            myRepos = new MyRepos.MyReposImpl(serviceInjector.getRepoSvcInterface(), storageInjector.getMemoryStorage(), storageInjector.getPreferenceStorage());
         }
         return myRepos;
     }

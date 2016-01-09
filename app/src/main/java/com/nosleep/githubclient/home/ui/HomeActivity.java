@@ -17,9 +17,6 @@ import com.nosleep.githubclient.R;
 
 import com.nosleep.githubclient.business.BusinessInjector;
 import com.nosleep.githubclient.business.MyRepos;
-import com.nosleep.githubclient.datalayer.services.ServiceInjector;
-import com.nosleep.githubclient.datalayer.storage.InMemoryStorage;
-import com.nosleep.githubclient.datalayer.storage.StorageInjector;
 import com.nosleep.githubclient.home.HomeContract;
 import com.nosleep.githubclient.home.presenter.HomePresenter;
 import com.nosleep.githubclient.utils.CircleTransform;
@@ -66,7 +63,7 @@ public class HomeActivity extends MasterTemplateActivity implements HomeContract
         frag.registerWelcomeAnimationListener(this);
         getSupportFragmentManager().beginTransaction().add(R.id.contentPanel, frag, "welcome").
                 commit();
-        userAction = new HomePresenter(this, businessInjector.getUserProfileBusiness(), businessInjector.getReposBusiness());
+        userAction = new HomePresenter(this, businessInjector.getUserProfile(), businessInjector.getReposBusiness());
         userAction.getUser();
     }
 

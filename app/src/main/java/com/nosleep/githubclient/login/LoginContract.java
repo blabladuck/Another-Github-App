@@ -2,7 +2,7 @@ package com.nosleep.githubclient.login;
 
 import android.support.annotation.IntDef;
 
-import com.nosleep.githubclient.business.OAuthBusiness;
+import com.nosleep.githubclient.business.OAuth;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -49,7 +49,7 @@ public interface LoginContract {
 
         void toggleProgressbar(boolean showprogress);
 
-        void navigateToHomeScreen(OAuthBusiness.Access access);
+        void navigateToHomeScreen(OAuth.Access access);
 
     }
 

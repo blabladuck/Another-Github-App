@@ -1,6 +1,6 @@
 package com.nosleep.githubclient.login.presenter;
 
-import com.nosleep.githubclient.business.OAuthBusiness;
+import com.nosleep.githubclient.business.OAuth;
 import com.nosleep.githubclient.login.LoginContract;
 import com.nosleep.githubclient.utils.EndPoints;
 
@@ -12,17 +12,17 @@ public class LoginPresenter implements LoginContract.UserAction {
 
     private static final String TAG = "LoginPresenter";
     private final LoginContract.LoginView view;
-    private final OAuthBusiness oAuthBusiness;
+    private final OAuth oAuth;
 
-    public LoginPresenter(LoginContract.LoginView view, OAuthBusiness oAuthBusiness) {
+    public LoginPresenter(LoginContract.LoginView view, OAuth oAuth) {
         this.view = view;
-        this.oAuthBusiness = oAuthBusiness;
+        this.oAuth = oAuth;
     }
 
 
     @Override
     public boolean checkUserSessionAvailability() {
-        OAuthBusiness.Access access = oAuthBusiness.getUserAccessCache();
+        OAuth.Access access = oAuth.getUserAccessCache();
         if (access != null) {
             view.navigateToHomeScreen(access);
             return true;
@@ -35,10 +35,10 @@ public class LoginPresenter implements LoginContract.UserAction {
         if (isDomainValid(domain) && isEmailValid(username) && isPasswordValid(password)) {
             EndPoints.getEndpoint().setDomain(domain);
             view.toggleProgressbar(true);
-            oAuthBusiness.login(domain, username, password, new OAuthBusiness.LoginCallback() {
+            oAuth.login(domain, username, password, new OAuth.LoginCallback() {
 
                 @Override
-                public void onLoginSuccess(OAuthBusiness.Access access) {
+                public void onLoginSuccess(OAuth.Access access) {
                     view.toggleProgressbar(false);
                     view.navigateToHomeScreen(access);
                 }

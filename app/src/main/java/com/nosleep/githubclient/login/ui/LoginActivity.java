@@ -20,18 +20,15 @@ import android.widget.ProgressBar;
 
 
 import com.nosleep.githubclient.business.BusinessInjector;
-import com.nosleep.githubclient.datalayer.services.ServiceInjector;
 
 
-import com.nosleep.githubclient.datalayer.storage.StorageInjector;
 import com.nosleep.githubclient.home.ui.HomeActivity;
 import com.nosleep.githubclient.login.LoginContract;
-import com.nosleep.githubclient.business.OAuthBusiness;
+import com.nosleep.githubclient.business.OAuth;
 import com.nosleep.githubclient.login.presenter.LoginPresenter;
 import com.nosleep.githubclient.utils.MasterTemplateActivity;
 
 import com.nosleep.githubclient.R;
-import com.nosleep.githubclient.home.ui.WelcomeUserFragment;
 
 
 public class LoginActivity extends MasterTemplateActivity implements LoginContract.LoginView {
@@ -98,7 +95,7 @@ public class LoginActivity extends MasterTemplateActivity implements LoginContra
     }
 
     @Override
-    public void navigateToHomeScreen(OAuthBusiness.Access access) {
+    public void navigateToHomeScreen(OAuth.Access access) {
         Intent intent = new Intent(this, HomeActivity.class);
         intent.putExtra("username", access.username);
         intent.putExtra("token", access.token);

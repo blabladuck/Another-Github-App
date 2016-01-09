@@ -1,7 +1,7 @@
 package com.nosleep.githubclient.home.presenter;
 
 import com.nosleep.githubclient.business.MyRepos;
-import com.nosleep.githubclient.business.UserProfileBusiness;
+import com.nosleep.githubclient.business.UserProfile;
 import com.nosleep.githubclient.home.HomeContract;
 
 import java.util.List;
@@ -11,10 +11,10 @@ import java.util.List;
  */
 public class HomePresenter implements HomeContract.UserAction {
     private HomeContract.WelcomeView homeview;
-    private UserProfileBusiness userProfile;
+    private UserProfile userProfile;
     private MyRepos myRepos;
 
-    public HomePresenter(HomeContract.WelcomeView homeview, UserProfileBusiness userProfile, MyRepos myRepos) {
+    public HomePresenter(HomeContract.WelcomeView homeview, UserProfile userProfile, MyRepos myRepos) {
         this.homeview = homeview;
         this.userProfile = userProfile;
         this.myRepos = myRepos;
@@ -22,9 +22,9 @@ public class HomePresenter implements HomeContract.UserAction {
 
     @Override
     public void getUser() {
-        userProfile.getUserProfile(new UserProfileBusiness.UserProfileCallback() {
+        userProfile.getUserProfile(new UserProfile.UserProfileCallback() {
             @Override
-            public void onSuccess(UserProfileBusiness.UserProfile user) {
+            public void onSuccess(UserProfile.UserData user) {
                 homeview.showWelcomeScreen(user.name, user.avatarURL);
             }
 
