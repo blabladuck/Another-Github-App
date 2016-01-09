@@ -145,6 +145,9 @@ public class VolleyDelegate {
 
                 @Override
                 public byte[] getBody() throws AuthFailureError {
+                    if (requestBody == null) {
+                        return "".getBytes();
+                    }
                     return requestBody.getBytes();
                 }
 
@@ -155,7 +158,7 @@ public class VolleyDelegate {
                                 response.data,
                                 HttpHeaderParser.parseCharset(response.headers));
                         Gson gson = new Gson();
-                        Log.d(VolleyDelegate.TAG,"<--------"+response.statusCode);
+                        Log.d(VolleyDelegate.TAG, "<--------" + response.statusCode);
                         Set<String> keyset = response.headers.keySet();
                         Log.d(VolleyDelegate.TAG, "**********************");
                         for (String str : keyset) {

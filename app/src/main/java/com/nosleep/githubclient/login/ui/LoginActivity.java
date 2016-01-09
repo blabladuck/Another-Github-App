@@ -19,17 +19,19 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 
 
-import business.DependencyInjector;
-import business.service.ServiceInjector;
-import business.storage.StorageInjector;
+import com.nosleep.githubclient.business.BusinessInjector;
+import com.nosleep.githubclient.datalayer.services.ServiceInjector;
 
+
+import com.nosleep.githubclient.datalayer.storage.StorageInjector;
+import com.nosleep.githubclient.home.ui.HomeActivity;
 import com.nosleep.githubclient.login.LoginContract;
-import com.nosleep.githubclient.login.business.LoginPresenter;
-import com.nosleep.githubclient.login.business.OAuthBusiness;
+import com.nosleep.githubclient.business.OAuthBusiness;
+import com.nosleep.githubclient.login.presenter.LoginPresenter;
 import com.nosleep.githubclient.utils.MasterTemplateActivity;
 
 import com.nosleep.githubclient.R;
-import com.nosleep.githubclient.home.WelcomeUserFragment;
+import com.nosleep.githubclient.home.ui.WelcomeUserFragment;
 
 
 public class LoginActivity extends MasterTemplateActivity implements LoginContract.LoginView {
@@ -49,10 +51,8 @@ public class LoginActivity extends MasterTemplateActivity implements LoginContra
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ServiceInjector serviceInjector = new ServiceInjector(getApplicationContext());
-        StorageInjector storageInjector = new StorageInjector(getApplicationContext());
-        DependencyInjector injector = new DependencyInjector(serviceInjector, storageInjector);
-        userAction = new LoginPresenter(this, injector.getOAuthBusiness());
+        BusinessInjector businessInjector = BusinessInjector.getInstance(this);
+        userAction = new LoginPresenter(this, businessInjector.getOAuthBusiness());
         if (!userAction.checkUserSessionAvailability()) {
             showLoginScreen();
         }
@@ -99,12 +99,10 @@ public class LoginActivity extends MasterTemplateActivity implements LoginContra
 
     @Override
     public void navigateToHomeScreen(OAuthBusiness.Access access) {
-
-        /*Intent intent = new Intent(this, HomeActivity.class);
-        intent.putExtra("avatar_url", user.getAvatarUrl());
-        intent.putExtra("username", user.getName());
-        intent.putExtra("myrepos", user.getReposUrl());
-        startActivity(intent);*/
+        Intent intent = new Intent(this, HomeActivity.class);
+        intent.putExtra("username", access.username);
+        intent.putExtra("token", access.token);
+        startActivity(intent);
         finish();
     }
 
@@ -133,15 +131,6 @@ public class LoginActivity extends MasterTemplateActivity implements LoginContra
             }
         });
 
-    }
-
-    @Override
-    public void showWelcomeScreen(String username, String token) {
-        Bundle bundle = new Bundle();
-        bundle.putString(WelcomeUserFragment.EXTRA_USER_NAME, username);
-        bundle.putString(WelcomeUserFragment.EXTRA_TOKEN, token);
-        getSupportFragmentManager().beginTransaction().replace(android.R.id.content, WelcomeUserFragment.newInstance(bundle)).
-                commit();
     }
 
     @Override

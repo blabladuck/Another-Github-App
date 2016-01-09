@@ -2,7 +2,7 @@ package com.nosleep.githubclient.login;
 
 import android.support.annotation.IntDef;
 
-import com.nosleep.githubclient.login.business.OAuthBusiness;
+import com.nosleep.githubclient.business.OAuthBusiness;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -14,7 +14,6 @@ public interface LoginContract {
 
 
     interface LoginView {
-        void navigateToHomeScreen(OAuthBusiness.Access access);
 
         @IntDef({USERNAME_EMPTY, USERNAME_INVALID, VALID})
         @Retention(RetentionPolicy.SOURCE)
@@ -42,8 +41,6 @@ public interface LoginContract {
 
         void showLoginScreen();
 
-        void showWelcomeScreen(String username, String token);
-
         void showUsernameError(@InvalidUsernameCode int errorcode);
 
         void showPasswordError(@InvalidPasswordCode int errorcode);
@@ -51,6 +48,8 @@ public interface LoginContract {
         void showDomainError(@InvalidDomainCode int errorcode);
 
         void toggleProgressbar(boolean showprogress);
+
+        void navigateToHomeScreen(OAuthBusiness.Access access);
 
     }
 

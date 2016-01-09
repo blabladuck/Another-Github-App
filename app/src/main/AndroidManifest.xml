@@ -21,7 +21,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".home.HomeActivity"
+            android:name=".home.ui.HomeActivity"
             android:theme="@style/AppTheme.OverlapSystemBar" />
     </application>
 

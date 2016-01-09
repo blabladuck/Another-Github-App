@@ -6,8 +6,6 @@ package com.nosleep.githubclient.utils;
 public class EndPoints {
     private String domain;
     private static EndPoints endPoints = new EndPoints();
-    private final String AUTHORIZATION = "/authorizations";
-    private final String REPOS = "/user/repos";
     private final String SCHEME = "https://";
 
     public static EndPoints getEndpoint() {
