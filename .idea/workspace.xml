@@ -9,28 +9,7 @@
     <option name="TOOL_WINDOW_CONFIGURED_FILTER" value="Show only selected application" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="6e412b90-6e3d-4546-9d55-cb1cf00542a9" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/java/com/nosleep/githubclient/commits/ui/CommitsActivity.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/java/com/nosleep/githubclient/commits/ui/CommitsFragment.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/java/com/nosleep/githubclient/commits/presenter/CommitsPresenter.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/java/com/nosleep/githubclient/business/OAuth.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/java/com/nosleep/githubclient/business/UserProfile.java" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/app/src/main/java/com/nosleep/githubclient/business/MyReposImpl.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/app/src/main/java/com/nosleep/githubclient/business/OAuthBusiness.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/app/src/main/java/com/nosleep/githubclient/business/OAuthBusinessImpl.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/app/src/main/java/com/nosleep/githubclient/business/UserProfileBusiness.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/app/src/main/java/com/nosleep/githubclient/business/UserProfileBusinessImpl.java" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/mock/java/com/nosleep/githubclient/business/BusinessInjector.java" afterPath="$PROJECT_DIR$/app/src/mock/java/com/nosleep/githubclient/business/BusinessInjector.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/prod/java/com/nosleep/githubclient/business/BusinessInjector.java" afterPath="$PROJECT_DIR$/app/src/prod/java/com/nosleep/githubclient/business/BusinessInjector.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/nosleep/githubclient/home/ui/HomeActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/nosleep/githubclient/home/ui/HomeActivity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/nosleep/githubclient/home/presenter/HomePresenter.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/nosleep/githubclient/home/presenter/HomePresenter.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/nosleep/githubclient/login/ui/LoginActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/nosleep/githubclient/login/ui/LoginActivity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/nosleep/githubclient/login/LoginContract.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/nosleep/githubclient/login/LoginContract.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/nosleep/githubclient/login/presenter/LoginPresenter.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/nosleep/githubclient/login/presenter/LoginPresenter.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/nosleep/githubclient/business/MyRepos.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/nosleep/githubclient/business/MyRepos.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/values/colors.xml" afterPath="$PROJECT_DIR$/app/src/main/res/values/colors.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-    </list>
+    <list default="true" id="6e412b90-6e3d-4546-9d55-cb1cf00542a9" name="Default" comment="" />
     <ignored path="Another-Github-App.iws" />
     <ignored path=".idea/workspace.xml" />
     <ignored path="$PROJECT_DIR$/.gradle/" />
@@ -78,7 +57,7 @@
       <file leaf-file-name="OAuth.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/nosleep/githubclient/business/OAuth.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="2.1343873">
+            <state vertical-scroll-proportion="4.5">
               <caret line="80" column="44" selection-start-line="80" selection-start-column="44" selection-end-line="80" selection-end-column="44" />
               <folding />
             </state>
@@ -4077,11 +4056,11 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="10" y="43" width="1260" height="650" extended-state="0" />
-    <editor active="true" />
+    <editor active="false" />
     <layout>
       <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.18913858" sideWeight="0.5" order="13" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.49812734" sideWeight="0.5" order="13" side_tool="false" content_ui="tabs" />
       <window_info id="Android Model" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="5" side_tool="true" content_ui="tabs" />
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.23595506" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -4509,7 +4488,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/nosleep/githubclient/business/OAuth.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="2.1343873">
+        <state vertical-scroll-proportion="4.5">
           <caret line="80" column="44" selection-start-line="80" selection-start-column="44" selection-end-line="80" selection-end-column="44" />
           <folding />
         </state>
