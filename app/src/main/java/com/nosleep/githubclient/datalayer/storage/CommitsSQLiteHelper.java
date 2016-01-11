@@ -2,15 +2,15 @@ package com.nosleep.githubclient.datalayer.storage;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 /**
  * Created by Sanjeev on 09/01/16.
  */
-public class CommitsSQLiteHelper extends SQLiteOpenHelper {
-    private static final String DATABASE_NAME = "gitcache.db";
-    private static final String TABLE_NAME = "commits";
+class CommitsSQLiteHelper extends SQLiteOpenHelper {
+    static final String DATABASE_NAME = "gitcache.db";
     private static final int DATABASE_VERSION = 1;
 
     private static CommitsSQLiteHelper helper;
@@ -23,18 +23,20 @@ public class CommitsSQLiteHelper extends SQLiteOpenHelper {
         return helper;
     }
 
-    private final String CREATE_COMMIT_TABLE = "CREATE TABLE IF NOT EXISTS " + TABLE_NAME + " (\n" +
+    private final String CREATE_COMMIT_TABLE = "CREATE TABLE IF NOT EXISTS " + DataProviderContract.Commits.TABLE_NAME + " (\n" +
             "\t`id`\tINTEGER PRIMARY KEY AUTOINCREMENT,\n" +
             "\t`sha`\tTEXT UNIQUE,\n" +
             "\t`author`\tTEXT,\n" +
             "\t`contactauthor`\tTEXT,\n" +
+            "\t`authoravatar`\tBLOB,\n" +
             "\t`committer`\tTEXT,\n" +
             "\t`contactcommitter`\tTEXT,\n" +
+            "\t`committeravatar`\tBLOB,\n" +
             "\t`commitmessage`\tTEXT,\n" +
             "\t`commitdate`\tTEXT\n" +
             ");";
 
-    private final String DELETE_COMMIT_TABLE = "DROP TABLE IF EXISTS " + TABLE_NAME + "";
+    private final String DELETE_COMMIT_TABLE = "DROP TABLE IF EXISTS " + DataProviderContract.Commits.TABLE_NAME + "";
 
 
     public CommitsSQLiteHelper(Context context) {
@@ -52,24 +54,5 @@ public class CommitsSQLiteHelper extends SQLiteOpenHelper {
         db.execSQL(DELETE_COMMIT_TABLE);
         db.execSQL(CREATE_COMMIT_TABLE);
     }
-
-    public long insert(ContentValues values) {
-        if (values != null & values.size() > 0) {
-            return db.insert(TABLE_NAME, null, values);
-        }
-        return -1l;
-    }
-
-    public int update(ContentValues values, String whereClause, String[] whereArgs) {
-        if (values != null & values.size() > 0) {
-            return db.update(TABLE_NAME, values, whereClause, whereArgs);
-        }
-        return 0;
-    }
-
-    public int delete(String whereClause, String[] whereArgs) {
-        return db.delete(TABLE_NAME, whereClause, whereArgs);
-    }
-
 
 }

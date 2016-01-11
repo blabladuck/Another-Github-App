@@ -8,6 +8,7 @@ import com.nosleep.githubclient.datalayer.services.repos.RepoSvcInterface;
 import com.nosleep.githubclient.datalayer.services.repos.Repository;
 import com.nosleep.githubclient.datalayer.storage.AppPreferenceStorage;
 import com.nosleep.githubclient.datalayer.storage.InMemoryStorage;
+import com.nosleep.githubclient.utils.ServiceListener;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -68,7 +69,7 @@ public abstract class MyRepos {
         public void getRepos(final RepoLoadCallback callback) {
             if (memoryCache == null) {
                 Authorizations authorizations = memoryStorage.getAuthorizations();
-                repoSvcInterface.getMyRepos(authorizations.getToken(), new RepoSvcInterface.ServiceListener<Repository[]>() {
+                repoSvcInterface.getMyRepos(authorizations.getToken(), new ServiceListener<Repository[]>() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Log.d(TAG, error.toString());

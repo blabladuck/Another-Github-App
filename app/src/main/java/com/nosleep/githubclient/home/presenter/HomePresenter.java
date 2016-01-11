@@ -47,4 +47,9 @@ public class HomePresenter implements HomeContract.UserAction {
         });
     }
 
+    @Override
+    public void onRepoItemClicked(String repo, String branch, String owner) {
+        homeview.navigateToCommitScreen(repo,branch,owner);
+    }
+
 }

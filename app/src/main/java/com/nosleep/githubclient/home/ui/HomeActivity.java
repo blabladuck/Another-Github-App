@@ -1,5 +1,6 @@
 package com.nosleep.githubclient.home.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -17,6 +18,7 @@ import com.nosleep.githubclient.R;
 
 import com.nosleep.githubclient.business.BusinessInjector;
 import com.nosleep.githubclient.business.MyRepos;
+import com.nosleep.githubclient.commits.ui.CommitsActivity;
 import com.nosleep.githubclient.home.HomeContract;
 import com.nosleep.githubclient.home.presenter.HomePresenter;
 import com.nosleep.githubclient.utils.CircleTransform;
@@ -82,7 +84,7 @@ public class HomeActivity extends MasterTemplateActivity implements HomeContract
 
     @Override
     public void showWelcomeScreen(String username, String avatar) {
-        Log.d(TAG,"avatar = "+avatar);
+        Log.d(TAG, "avatar = " + avatar);
         txtusername.setText(username);
         Glide.with(this).load(avatar).transform(new CircleTransform(this)).into(profilepic);
         WelcomeUserFragment welcomeUserFragment = (WelcomeUserFragment) getSupportFragmentManager().findFragmentByTag("welcome");
@@ -94,6 +96,16 @@ public class HomeActivity extends MasterTemplateActivity implements HomeContract
         ReposFragment fragment = (ReposFragment) getSupportFragmentManager().findFragmentByTag("repos");
         fragment.displayRepos(info);
     }
+
+    @Override
+    public void navigateToCommitScreen(String repo, String branch, String owner) {
+        Intent intent = new Intent(this,CommitsActivity.class);
+        intent.putExtra(CommitsActivity.EXTRA_REPO, repo);
+        intent.putExtra(CommitsActivity.EXTRA_BRANCH, branch);
+        intent.putExtra(CommitsActivity.EXTRA_OWNER, owner);
+        startActivity(intent);
+    }
+
 
     @Override
     protected void onDestroy() {
@@ -115,5 +127,10 @@ public class HomeActivity extends MasterTemplateActivity implements HomeContract
     @Override
     public void onRepoViewCreated() {
         userAction.getRepos(false);
+    }
+
+    @Override
+    public void onRepoViewClicked(String repo, String branch, String owner) {
+        userAction.onRepoItemClicked(repo, branch, owner);
     }
 }

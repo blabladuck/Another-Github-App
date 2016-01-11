@@ -1,28 +1,28 @@
 package com.nosleep.githubclient.datalayer.services;
 
 import com.android.volley.Request;
-
-import java.util.HashMap;
-
 import com.nosleep.githubclient.datalayer.services.branches.Branch;
-import com.nosleep.githubclient.datalayer.services.branches.BranchesSvcInterface;
+import com.nosleep.githubclient.datalayer.services.commits.Commit;
+import com.nosleep.githubclient.datalayer.services.commits.CommitsSvcInterface;
 import com.nosleep.githubclient.datalayer.services.repos.Repository;
 import com.nosleep.githubclient.utils.ServiceListener;
 import com.nosleep.githubclient.utils.VolleyDelegate;
 
+import java.util.HashMap;
+
 /**
- * Created by ssub3 on 1/4/16.
+ * Created by Sanjeev on 10/01/16.
  */
-class BranchesSvcImpl implements BranchesSvcInterface {
+public class CommitsSvcImpl implements CommitsSvcInterface {
 
     VolleyDelegate delegate;
 
-    BranchesSvcImpl(VolleyDelegate delegate) {
-        this.delegate = delegate;
+    CommitsSvcImpl(VolleyDelegate delegator) {
+        this.delegate = delegator;
     }
 
     @Override
-    public void getBranches(String token, String repo, String owner, ServiceListener<Branch[]> listener) {
+    public void getCommits(String repo, String branch, String owner, ServiceListener<Commit[]> serviceListener) {
         String modified = PATH.replace(":owner", owner).replace(":repo", repo);
         String endpoint = "https://" + "api.github.com" + modified;
         HashMap<String, String> headers = new HashMap<>();
@@ -33,8 +33,8 @@ class BranchesSvcImpl implements BranchesSvcInterface {
                 .url(endpoint)
                 .headers(headers)
                 .gsonClass(Branch[].class)
-                .listener(listener)
-                .errorListener(listener)
+                .listener(serviceListener)
+                .errorListener(serviceListener)
                 .build();
         delegate.addToRequestQueue(request);
     }

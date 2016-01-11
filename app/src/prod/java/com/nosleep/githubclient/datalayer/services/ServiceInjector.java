@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.nosleep.githubclient.datalayer.services.authorization.LoginSvcInterface;
 import com.nosleep.githubclient.datalayer.services.branches.BranchesSvcInterface;
+import com.nosleep.githubclient.datalayer.services.commits.CommitsSvcInterface;
 import com.nosleep.githubclient.datalayer.services.repos.RepoSvcInterface;
 import com.nosleep.githubclient.datalayer.services.user.UserSvcInterface;
 import com.nosleep.githubclient.utils.VolleyDelegate;
@@ -17,6 +18,7 @@ public class ServiceInjector {
     private static UserSvcInterface userSvcInterface;
     private static BranchesSvcInterface branchesSvcInterface;
     private static RepoSvcInterface repoSvcInterface;
+    private CommitsSvcImpl commitsSvcInterface;
 
     public ServiceInjector(Context appContext) {
         if (volleyDelegate == null) {
@@ -53,6 +55,13 @@ public class ServiceInjector {
             branchesSvcInterface = new BranchesSvcImpl(volleyDelegate);
         }
         return branchesSvcInterface;
+    }
+
+    public CommitsSvcInterface getCommitsSvcInterface() {
+        if (commitsSvcInterface == null) {
+            commitsSvcInterface = new CommitsSvcImpl(volleyDelegate);
+        }
+        return commitsSvcInterface;
     }
 
 }

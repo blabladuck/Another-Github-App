@@ -1,13 +1,11 @@
 package com.nosleep.githubclient.home.ui;
 
-import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -16,14 +14,12 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.nosleep.githubclient.R;
-import com.nosleep.githubclient.business.BusinessInjector;
 import com.nosleep.githubclient.business.MyRepos;
-import com.nosleep.githubclient.datalayer.services.ServiceInjector;
-import com.nosleep.githubclient.datalayer.storage.StorageInjector;
-import com.nosleep.githubclient.home.HomeContract;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.WeakHashMap;
 
 /**
  * Created by ssub3 on 1/5/16.
@@ -35,6 +31,8 @@ public class ReposFragment extends Fragment {
         void onRepoRefreshPulled();
 
         void onRepoViewCreated();
+
+        void onRepoViewClicked(String repo, String branch, String owner);
     }
 
     private SwipeRefreshLayout refreshLayout;
@@ -62,7 +60,7 @@ public class ReposFragment extends Fragment {
             }
         });
         recyclerView = (RecyclerView) refreshLayout.findViewById(R.id.repos_list);
-        reposAdapter = new ReposAdapter(new ArrayList<MyRepos.RepoInfo>(0));
+        reposAdapter = new ReposAdapter(new ArrayList<MyRepos.RepoInfo>(0), (ReposActionListener) getActivity());
         recyclerView.setAdapter(reposAdapter);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -78,9 +76,11 @@ public class ReposFragment extends Fragment {
 
     private static class ReposAdapter extends RecyclerView.Adapter<ReposAdapter.ViewHolder> {
         private List<MyRepos.RepoInfo> repoInfoList;
+        private WeakReference<ReposActionListener> listenerWeakReference;
 
-        ReposAdapter(List<MyRepos.RepoInfo> repoInfoList) {
+        ReposAdapter(List<MyRepos.RepoInfo> repoInfoList, ReposActionListener listener) {
             this.repoInfoList = repoInfoList;
+            this.listenerWeakReference = new WeakReference<ReposActionListener>(listener);
         }
 
         public void setRepoInfoList(List<MyRepos.RepoInfo> repoInfoList) {
@@ -98,6 +98,7 @@ public class ReposFragment extends Fragment {
         @Override
         public void onBindViewHolder(ReposAdapter.ViewHolder holder, int position) {
             MyRepos.RepoInfo repoInfo = repoInfoList.get(position);
+            holder.repoInfo = repoInfo;
             holder.title.setText(repoInfo.name);
             holder.description.setText(repoInfo.owner);
         }
@@ -107,17 +108,26 @@ public class ReposFragment extends Fragment {
             return repoInfoList.size();
         }
 
-        public class ViewHolder extends RecyclerView.ViewHolder {
+        public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
             public TextView title;
 
             public TextView description;
 
+            public MyRepos.RepoInfo repoInfo;
+
             public ViewHolder(View itemView) {
                 super(itemView);
+                itemView.setOnClickListener(this);
                 title = (TextView) itemView.findViewById(R.id.note_detail_title);
                 description = (TextView) itemView.findViewById(R.id.note_detail_description);
             }
 
+            @Override
+            public void onClick(View v) {
+                if (listenerWeakReference.get() != null) {
+                    listenerWeakReference.get().onRepoViewClicked(repoInfo.name, repoInfo.defaultBranch, repoInfo.owner);
+                }
+            }
         }
     }
 

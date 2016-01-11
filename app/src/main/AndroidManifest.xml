@@ -23,6 +23,14 @@
         <activity
             android:name=".home.ui.HomeActivity"
             android:theme="@style/AppTheme.OverlapSystemBar" />
+        <activity
+            android:name=".commits.ui.CommitsActivity"
+            android:parentActivityName=".home.ui.HomeActivity"
+            android:theme="@style/AppTheme.OverlapSystemBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".home.ui.HomeActivity" />
+        </activity>
     </application>
 
 </manifest>

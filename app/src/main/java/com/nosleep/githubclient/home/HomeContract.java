@@ -10,12 +10,17 @@ import java.util.List;
 public interface HomeContract {
     interface WelcomeView {
         void showWelcomeScreen(String username, String avatar);
+
         void showReposScreen(List<MyRepos.RepoInfo> info);
+
+        void navigateToCommitScreen(String repo, String branch, String owner);
     }
 
     interface UserAction {
         void getUser();
 
         void getRepos(boolean forceRefresh);
+
+        void onRepoItemClicked(String repo, String branch, String owner);
     }
 }

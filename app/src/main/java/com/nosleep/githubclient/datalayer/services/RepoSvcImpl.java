@@ -6,6 +6,7 @@ import java.util.HashMap;
 
 import com.nosleep.githubclient.datalayer.services.repos.RepoSvcInterface;
 import com.nosleep.githubclient.datalayer.services.repos.Repository;
+import com.nosleep.githubclient.utils.ServiceListener;
 import com.nosleep.githubclient.utils.VolleyDelegate;
 
 /**

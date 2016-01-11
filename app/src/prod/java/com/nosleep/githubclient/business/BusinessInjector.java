@@ -15,6 +15,7 @@ public class BusinessInjector {
     private OAuth oAuth;
     private UserProfile userProfile;
     private MyRepos myRepos;
+    private BranchCommits branchCommits;
 
 
     public static synchronized BusinessInjector getInstance(Context context) {
@@ -48,5 +49,12 @@ public class BusinessInjector {
             myRepos = new MyRepos.MyReposImpl(serviceInjector.getRepoSvcInterface(), storageInjector.getMemoryStorage(), storageInjector.getPreferenceStorage());
         }
         return myRepos;
+    }
+
+    public BranchCommits getBranchCommits(Context appContext) {
+        if (branchCommits == null) {
+            branchCommits = new BranchCommits.BranchCommitsImpl(appContext.getApplicationContext(), serviceInjector.getCommitsSvcInterface(), storageInjector.getMemoryStorage());
+        }
+        return branchCommits;
     }
 }
