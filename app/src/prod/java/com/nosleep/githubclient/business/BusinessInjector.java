@@ -1,5 +1,6 @@
 package com.nosleep.githubclient.business;
 
+import android.app.LoaderManager;
 import android.content.Context;
 
 import com.nosleep.githubclient.datalayer.services.ServiceInjector;
@@ -51,9 +52,9 @@ public class BusinessInjector {
         return myRepos;
     }
 
-    public BranchCommits getBranchCommits(Context appContext) {
+    public BranchCommits getBranchCommits(Context appContext,LoaderManager loaderManager) {
         if (branchCommits == null) {
-            branchCommits = new BranchCommits.BranchCommitsImpl(appContext.getApplicationContext(), serviceInjector.getCommitsSvcInterface(), storageInjector.getMemoryStorage());
+            branchCommits = new BranchCommits.BranchCommitsImpl(appContext.getApplicationContext(),loaderManager, serviceInjector.getCommitsSvcInterface(), storageInjector.getMemoryStorage());
         }
         return branchCommits;
     }

@@ -1,7 +1,12 @@
 package com.nosleep.githubclient.business;
 
 
+import android.app.LoaderManager;
+import android.content.ContentResolver;
 import android.content.Context;
+import android.content.Loader;
+import android.database.Cursor;
+import android.os.Bundle;
 
 import com.android.volley.VolleyError;
 import com.nosleep.githubclient.datalayer.services.commits.Commit;
@@ -9,8 +14,8 @@ import com.nosleep.githubclient.datalayer.services.commits.CommitsSvcInterface;
 import com.nosleep.githubclient.datalayer.storage.InMemoryStorage;
 import com.nosleep.githubclient.utils.ServiceListener;
 
+import java.lang.ref.WeakReference;
 import java.util.Calendar;
-import java.util.List;
 
 /**
  * Created by Sanjeev on 10/01/16.
@@ -44,30 +49,39 @@ public abstract class BranchCommits {
     }
 
     public interface CommitsLoadCallback {
-        void onLoadCommits(int loadStatus, List<CommitData> info);
+        void onLoadCommits(int loadStatus, CommitData[] info);
     }
 
     public abstract void getCommits(String repo, String branch, String owner, Calendar since, CommitsLoadCallback callback);
 
-    static class BranchCommitsImpl extends BranchCommits {
+    static class BranchCommitsImpl extends BranchCommits implements LoaderManager.LoaderCallbacks<Cursor> {
 
+        private final LoaderManager loaderManager;
         CommitsSvcInterface commitsSvcInterface;
         InMemoryStorage inMemoryStorage;
-        Context appContext;
+        ContentResolver contentResolver;
+        WeakReference<CommitsLoadCallback> weakCallback;
 
-        BranchCommitsImpl(Context appContext, CommitsSvcInterface commitsSvcInterface,
+        BranchCommitsImpl(Context appContext, LoaderManager loaderManager,CommitsSvcInterface commitsSvcInterface,
                           InMemoryStorage inMemoryStorage) {
-            this.appContext = appContext;
+            this.contentResolver = appContext.getContentResolver();
             this.commitsSvcInterface = commitsSvcInterface;
             this.inMemoryStorage = inMemoryStorage;
+            this.loaderManager = loaderManager;
         }
 
         @Override
         public void getCommits(String repo, String branch, String owner, Calendar since, CommitsLoadCallback callback) {
+            weakCallback = new WeakReference<CommitsLoadCallback>(callback);
+            loaderManager.initLoader(0,null,this);
             commitsSvcInterface.getCommits(repo, branch, owner, new ServiceListener<Commit[]>() {
 
                 @Override
                 public void onResponse(Commit[] response) {
+                    BranchCommits.CommitData[] branchCommits = new BranchCommits.CommitData[response.length];
+                    for (int i = 0; i < response.length; i++) {
+                        //branchCommits[i] = new BranchCommits.CommitData();
+                    }
                 }
 
                 @Override
@@ -75,6 +89,23 @@ public abstract class BranchCommits {
 
                 }
             });
+        }
+
+        @Override
+        public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+            return null;
+        }
+
+        @Override
+        public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+            if (weakCallback != null && weakCallback.get() != null) {
+                weakCallback.get().onLoadCommits(0, null);
+            }
+        }
+
+        @Override
+        public void onLoaderReset(Loader<Cursor> loader) {
+
         }
     }
 }
