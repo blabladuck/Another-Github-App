@@ -79,7 +79,8 @@ public abstract class BranchCommits {
         public void getCommits(String repo, String branch, String owner, Calendar since, CommitsLoadCallback callback) {
             weakCallback = new WeakReference<CommitsLoadCallback>(callback);
             loaderManager.initLoader(0, null, this);
-            commitsSvcInterface.getCommits(repo, branch, owner, new ServiceListener<Commit[]>() {
+            String token = inMemoryStorage.getBasicAuthHeaderValue();
+            commitsSvcInterface.getCommits(token,repo, branch, owner, new ServiceListener<Commit[]>() {
 
                 @Override
                 public void onResponse(Commit[] response) {

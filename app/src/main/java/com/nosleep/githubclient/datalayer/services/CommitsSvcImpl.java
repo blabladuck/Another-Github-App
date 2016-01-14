@@ -22,17 +22,17 @@ public class CommitsSvcImpl implements CommitsSvcInterface {
     }
 
     @Override
-    public void getCommits(String repo, String branch, String owner, ServiceListener<Commit[]> serviceListener) {
+    public void getCommits(String token, String repo, String branch, String owner, ServiceListener<Commit[]> serviceListener) {
         String modified = PATH.replace(":owner", owner).replace(":repo", repo);
         String endpoint = "https://" + "api.github.com" + modified;
         HashMap<String, String> headers = new HashMap<>();
-        headers.put("Authorization", "Bearer 76e958180df7d140698e6aabce10bf7ccad8ff22");
+        headers.put("Authorization", token);
         VolleyDelegate.VolleyRequestBuilder<Repository> builder = new VolleyDelegate.VolleyRequestBuilder<>();
         Request<Repository> request = builder
                 .method(Request.Method.GET)
                 .url(endpoint)
                 .headers(headers)
-                .gsonClass(Branch[].class)
+                .gsonClass(Commit[].class)
                 .listener(serviceListener)
                 .errorListener(serviceListener)
                 .build();

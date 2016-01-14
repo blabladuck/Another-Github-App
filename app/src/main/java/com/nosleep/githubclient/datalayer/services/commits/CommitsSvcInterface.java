@@ -9,5 +9,5 @@ import com.nosleep.githubclient.utils.ServiceListener;
 public interface CommitsSvcInterface {
     String PATH = "/repos/:owner/:repo/commits";
 
-    void getCommits(String repo, String branch, String owner, ServiceListener<Commit[]> serviceListener);
+    void getCommits(String token, String repo, String branch, String owner, ServiceListener<Commit[]> serviceListener);
 }
