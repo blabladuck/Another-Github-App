@@ -35,6 +35,8 @@ public class DataProvider extends ContentProvider {
         commitsProjectionMap.put(DataProviderContract.Commits.COMMIT_MESSAGE, "commitmessage");
         commitsProjectionMap.put(DataProviderContract.Commits.COMMITTER_EMAIL, "contactcommitter");
         commitsProjectionMap.put(DataProviderContract.Commits.COMMITTER_NAME, "committer");
+        commitsProjectionMap.put(DataProviderContract.Commits.COMMITTER_AVATAR, "committeravatar");
+        commitsProjectionMap.put(DataProviderContract.Commits.AUTHOR_AVATAR, "authoravatar");
         commitsProjectionMap.put(DataProviderContract.Commits.SHA, "sha");
         commitsProjectionMap.put(DataProviderContract.Commits._ID, "id");
     }

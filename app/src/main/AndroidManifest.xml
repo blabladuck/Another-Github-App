@@ -31,6 +31,10 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".home.ui.HomeActivity" />
         </activity>
+
+        <provider
+            android:name=".datalayer.storage.DataProvider"
+            android:authorities="com.nosleep.githubclient.datalayer.storage" />
     </application>
 
 </manifest>

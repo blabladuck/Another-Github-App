@@ -1,7 +1,7 @@
 package com.nosleep.githubclient.business;
 
-import android.app.LoaderManager;
 import android.content.Context;
+import android.support.v4.app.LoaderManager;
 
 import com.nosleep.githubclient.datalayer.services.ServiceInjector;
 import com.nosleep.githubclient.datalayer.storage.StorageInjector;

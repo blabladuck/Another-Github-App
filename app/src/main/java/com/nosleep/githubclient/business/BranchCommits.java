@@ -1,16 +1,20 @@
 package com.nosleep.githubclient.business;
 
 
-import android.app.LoaderManager;
 import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Context;
-import android.content.Loader;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.Loader;
+import android.util.Log;
 
 import com.android.volley.VolleyError;
 import com.nosleep.githubclient.datalayer.services.commits.Commit;
 import com.nosleep.githubclient.datalayer.services.commits.CommitsSvcInterface;
+import com.nosleep.githubclient.datalayer.storage.CommitDAO;
+import com.nosleep.githubclient.datalayer.storage.DataProviderContract;
 import com.nosleep.githubclient.datalayer.storage.InMemoryStorage;
 import com.nosleep.githubclient.utils.ServiceListener;
 
@@ -55,6 +59,7 @@ public abstract class BranchCommits {
     public abstract void getCommits(String repo, String branch, String owner, Calendar since, CommitsLoadCallback callback);
 
     static class BranchCommitsImpl extends BranchCommits implements LoaderManager.LoaderCallbacks<Cursor> {
+        private static final String TAG = "BranchCommits";
 
         private final LoaderManager loaderManager;
         CommitsSvcInterface commitsSvcInterface;
@@ -62,7 +67,7 @@ public abstract class BranchCommits {
         ContentResolver contentResolver;
         WeakReference<CommitsLoadCallback> weakCallback;
 
-        BranchCommitsImpl(Context appContext, LoaderManager loaderManager,CommitsSvcInterface commitsSvcInterface,
+        BranchCommitsImpl(Context appContext, LoaderManager loaderManager, CommitsSvcInterface commitsSvcInterface,
                           InMemoryStorage inMemoryStorage) {
             this.contentResolver = appContext.getContentResolver();
             this.commitsSvcInterface = commitsSvcInterface;
@@ -73,20 +78,33 @@ public abstract class BranchCommits {
         @Override
         public void getCommits(String repo, String branch, String owner, Calendar since, CommitsLoadCallback callback) {
             weakCallback = new WeakReference<CommitsLoadCallback>(callback);
-            loaderManager.initLoader(0,null,this);
+            loaderManager.initLoader(0, null, this);
             commitsSvcInterface.getCommits(repo, branch, owner, new ServiceListener<Commit[]>() {
 
                 @Override
                 public void onResponse(Commit[] response) {
-                    BranchCommits.CommitData[] branchCommits = new BranchCommits.CommitData[response.length];
+                    Log.d(TAG,"response length = "+response.length);
+                    ContentValues[] values = new ContentValues[response.length];
                     for (int i = 0; i < response.length; i++) {
-                        //branchCommits[i] = new BranchCommits.CommitData();
+                        values[i] = new ContentValues(9);
+                        values[i].put(DataProviderContract.Commits.SHA, response[i].getSha());
+                        values[i].put(DataProviderContract.Commits.COMMITTER_NAME, response[i].getCommit().getCommitter().getName());
+                        values[i].put(DataProviderContract.Commits.COMMITTER_EMAIL, response[i].getCommit().getCommitter().getEmail());
+                        values[i].put(DataProviderContract.Commits.COMMIT_MESSAGE, response[i].getCommit().getMessage());
+                        values[i].put(DataProviderContract.Commits.AUTHOR_NAME, response[i].getCommit().getAuthor().getName());
+                        values[i].put(DataProviderContract.Commits.AUTHOR_EMAIL, response[i].getCommit().getAuthor().getEmail());
+                        values[i].put(DataProviderContract.Commits.COMMIT_DATE, response[i].getCommit().getCommitter().getDate());
+                        values[i].put(DataProviderContract.Commits.AUTHOR_AVATAR, response[i].getAuthor().getAvatarUrl());
+                        values[i].put(DataProviderContract.Commits.COMMITTER_EMAIL, response[i].getCommitter().getAvatarUrl());
                     }
+                    CommitDAO dao = new CommitDAO(contentResolver);
+
+                    dao.insert(DataProviderContract.Commits.CONTENT_URI,values);
                 }
 
                 @Override
                 public void onErrorResponse(VolleyError error) {
-
+                    Log.d(TAG,"error = "+error);
                 }
             });
         }
@@ -97,16 +115,15 @@ public abstract class BranchCommits {
         }
 
         @Override
-        public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-            if (weakCallback != null && weakCallback.get() != null) {
-                weakCallback.get().onLoadCommits(0, null);
-            }
+        public void onLoadFinished(android.support.v4.content.Loader<Cursor> loader, Cursor data) {
+
         }
 
         @Override
-        public void onLoaderReset(Loader<Cursor> loader) {
+        public void onLoaderReset(android.support.v4.content.Loader<Cursor> loader) {
 
         }
+
     }
 }
 

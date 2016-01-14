@@ -4,6 +4,7 @@ import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.net.Uri;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import java.util.HashMap;
 import java.util.List;
@@ -13,9 +14,10 @@ import java.util.Map;
  * Created by Sanjeev on 13/01/16.
  */
 public class CommitDAO {
+    private static final String TAG = "CommitDAO";
     private ContentResolver resolver;
 
-    CommitDAO(ContentResolver resolver) {
+    public CommitDAO(ContentResolver resolver) {
         this.resolver = resolver;
     }
 
@@ -24,9 +26,9 @@ public class CommitDAO {
             @Override
             public void run() {
                 if (values.length > 1) {
-                    resolver.bulkInsert(uri, values);
+                    Log.d(TAG, "bulkInsert = "+resolver.bulkInsert(uri, values));
                 } else {
-                    resolver.insert(uri, values[0]);
+                    Log.d(TAG, "insert = "+resolver.insert(uri, values[0]));
                 }
             }
         };

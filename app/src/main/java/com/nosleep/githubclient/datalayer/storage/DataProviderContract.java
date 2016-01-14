@@ -35,6 +35,8 @@ public class DataProviderContract {
         public static final String COMMITTER_EMAIL = "COMMITTER_EMAIL";
         public static final String COMMIT_MESSAGE = "COMMIT_MESSAGE";
         public static final String COMMIT_DATE = "COMMIT_DATE";
+        public static final String AUTHOR_AVATAR = "AUTHOR_AVATAR";
+        public static final String COMMITTER_AVATAR = "COMMITTER_AVATAR";
         public static final String DEFAULT_SORT_ORDER = "modified DESC";
         public static final int COMMIT_ID_PATH_POSITON = 1;
     }
