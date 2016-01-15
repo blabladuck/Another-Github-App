@@ -8,4 +8,12 @@
     <color name="secondary_text">#727272</color>
     <color name="icons">#FFFFFF</color>
     <color name="divider">#B6B6B6</color>
+    <color name="text_button">#DEDEDE</color>
+    <color name="text_menu">#DEDEDE</color>
+    <color name="text_caption">#8A8A8A</color>
+    <color name="text_body">#DEDEDE</color>
+    <color name="text_subheading">#DEDEDE</color>
+    <color name="text_title">#DEDEDE</color>
+    <color name="text_headline">#DEDEDE</color>
+
 </resources>
