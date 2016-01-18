@@ -54,8 +54,8 @@ public class InMemoryStorage {
         return branchList;
     }
 
-    public void setBranchList(List<Branch> branchList) {
-        this.branchList = branchList;
+    public void setBranchList(String repoName, List<Branch> branchList) {
+        //TODO complete this
     }
 
     public User getUser() {

@@ -14,6 +14,8 @@ public interface HomeContract {
         void showReposScreen(List<MyRepos.RepoInfo> info);
 
         void navigateToCommitScreen(String repo, String branch, String owner);
+
+        void navigateToBranchesScreen(String repo, String owner);
     }
 
     interface UserAction {
@@ -21,6 +23,6 @@ public interface HomeContract {
 
         void getRepos(boolean forceRefresh);
 
-        void onRepoItemClicked(String repo, String branch, String owner);
+        void onRepoItemClicked(String repo, String owner);
     }
 }

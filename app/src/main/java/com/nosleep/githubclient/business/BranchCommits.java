@@ -77,14 +77,15 @@ public abstract class BranchCommits {
 
         @Override
         public void getCommits(String repo, String branch, String owner, Calendar since, CommitsLoadCallback callback) {
-            weakCallback = new WeakReference<CommitsLoadCallback>(callback);
+            weakCallback = new WeakReference<>(callback);
             loaderManager.initLoader(0, null, this);
             String token = inMemoryStorage.getBasicAuthHeaderValue();
-            commitsSvcInterface.getCommits(token,repo, branch, owner, new ServiceListener<Commit[]>() {
+            Log.d(TAG, "getCommits() repo = " + repo + " branch = " + branch + "owner = " + owner);
+            commitsSvcInterface.getCommits(token, repo, branch, owner, new ServiceListener<Commit[]>() {
 
                 @Override
                 public void onResponse(Commit[] response) {
-                    Log.d(TAG,"response length = "+response.length);
+                    Log.d(TAG, "response length = " + response.length);
                     ContentValues[] values = new ContentValues[response.length];
                     for (int i = 0; i < response.length; i++) {
                         values[i] = new ContentValues(9);
@@ -100,12 +101,12 @@ public abstract class BranchCommits {
                     }
                     CommitDAO dao = new CommitDAO(contentResolver);
 
-                    dao.insert(DataProviderContract.Commits.CONTENT_URI,values);
+                    dao.insert(DataProviderContract.Commits.CONTENT_URI, values);
                 }
 
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    Log.d(TAG,"error = "+error);
+                    Log.d(TAG, "error = " + error);
                 }
             });
         }

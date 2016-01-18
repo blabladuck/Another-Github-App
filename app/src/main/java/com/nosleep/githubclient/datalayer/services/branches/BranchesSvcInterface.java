@@ -7,7 +7,7 @@ import com.nosleep.githubclient.utils.ServiceListener;
  * Created by ssub3 on 1/4/16.
  */
 public interface BranchesSvcInterface {
-    String PATH = "/repos/:owner/:repo/com.nosleep.githubclient.branches";
+    String PATH = "/repos/:owner/:repo/branches";
 
 
     void getBranches(String token, String repo, String owner, ServiceListener<Branch[]> listener);

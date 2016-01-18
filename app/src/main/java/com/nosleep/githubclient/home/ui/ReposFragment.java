@@ -19,7 +19,6 @@ import com.nosleep.githubclient.business.MyRepos;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.WeakHashMap;
 
 /**
  * Created by ssub3 on 1/5/16.
@@ -32,7 +31,7 @@ public class ReposFragment extends Fragment {
 
         void onRepoViewCreated();
 
-        void onRepoViewClicked(String repo, String branch, String owner);
+        void onRepoViewClicked(String repo, String owner);
     }
 
     private SwipeRefreshLayout refreshLayout;
@@ -125,7 +124,7 @@ public class ReposFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if (listenerWeakReference.get() != null) {
-                    listenerWeakReference.get().onRepoViewClicked(repoInfo.name, repoInfo.defaultBranch, repoInfo.owner);
+                    listenerWeakReference.get().onRepoViewClicked(repoInfo.name, repoInfo.owner);
                 }
             }
         }

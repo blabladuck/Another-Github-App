@@ -6,6 +6,7 @@ import android.util.Log;
 import android.util.LruCache;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.NetworkResponse;
 import com.android.volley.ParseError;
 import com.android.volley.Request;
@@ -132,7 +133,7 @@ public class VolleyDelegate {
 
 
         public Request<T> build() {
-            return new Request<T>(method, url, errorListener) {
+            Request<T> request = new Request<T>(method, url, errorListener) {
                 @Override
                 public Map<String, String> getHeaders() throws AuthFailureError {
                     return headers;
@@ -194,6 +195,8 @@ public class VolleyDelegate {
                     super.deliverError(error);
                 }
             };
+            request.setRetryPolicy(new DefaultRetryPolicy(15000, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+            return request;
         }
     }
 

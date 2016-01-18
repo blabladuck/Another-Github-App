@@ -15,7 +15,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.nosleep.githubclient.R;
-
+import com.nosleep.githubclient.branches.ui.BranchesActivity;
 import com.nosleep.githubclient.business.BusinessInjector;
 import com.nosleep.githubclient.business.MyRepos;
 import com.nosleep.githubclient.commits.ui.CommitsActivity;
@@ -99,10 +99,18 @@ public class HomeActivity extends MasterTemplateActivity implements HomeContract
 
     @Override
     public void navigateToCommitScreen(String repo, String branch, String owner) {
-        Intent intent = new Intent(this,CommitsActivity.class);
+        Intent intent = new Intent(this, CommitsActivity.class);
         intent.putExtra(CommitsActivity.EXTRA_REPO, repo);
         intent.putExtra(CommitsActivity.EXTRA_BRANCH, branch);
         intent.putExtra(CommitsActivity.EXTRA_OWNER, owner);
+        startActivity(intent);
+    }
+
+    @Override
+    public void navigateToBranchesScreen(String repo, String owner) {
+        Intent intent = new Intent(this, BranchesActivity.class);
+        intent.putExtra(BranchesActivity.EXTRA_REPO, repo);
+        intent.putExtra(BranchesActivity.EXTRA_OWNER, owner);
         startActivity(intent);
     }
 
@@ -130,7 +138,7 @@ public class HomeActivity extends MasterTemplateActivity implements HomeContract
     }
 
     @Override
-    public void onRepoViewClicked(String repo, String branch, String owner) {
-        userAction.onRepoItemClicked(repo, branch, owner);
+    public void onRepoViewClicked(String repo, String owner) {
+        userAction.onRepoItemClicked(repo, owner);
     }
 }

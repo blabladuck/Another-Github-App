@@ -48,8 +48,8 @@ public class HomePresenter implements HomeContract.UserAction {
     }
 
     @Override
-    public void onRepoItemClicked(String repo, String branch, String owner) {
-        homeview.navigateToCommitScreen(repo,branch,owner);
+    public void onRepoItemClicked(String repo, String owner) {
+        homeview.navigateToBranchesScreen(repo, owner);
     }
 
 }

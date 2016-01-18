@@ -17,6 +17,7 @@ public class BusinessInjector {
     private UserProfile userProfile;
     private MyRepos myRepos;
     private BranchCommits branchCommits;
+    private MyBranch myBranch;
 
 
     public static synchronized BusinessInjector getInstance(Context context) {
@@ -52,10 +53,17 @@ public class BusinessInjector {
         return myRepos;
     }
 
-    public BranchCommits getBranchCommits(Context appContext,LoaderManager loaderManager) {
+    public BranchCommits getBranchCommits(Context appContext, LoaderManager loaderManager) {
         if (branchCommits == null) {
-            branchCommits = new BranchCommits.BranchCommitsImpl(appContext.getApplicationContext(),loaderManager, serviceInjector.getCommitsSvcInterface(), storageInjector.getMemoryStorage());
+            branchCommits = new BranchCommits.BranchCommitsImpl(appContext.getApplicationContext(), loaderManager, serviceInjector.getCommitsSvcInterface(), storageInjector.getMemoryStorage());
         }
         return branchCommits;
+    }
+
+    public MyBranch getBranchesBusiness() {
+        if (myBranch == null) {
+            myBranch = new MyBranch.MyBranchImpl(serviceInjector.getBranchesSvcInterface(), storageInjector.getMemoryStorage(), storageInjector.getPreferenceStorage());
+        }
+        return myBranch;
     }
 }
