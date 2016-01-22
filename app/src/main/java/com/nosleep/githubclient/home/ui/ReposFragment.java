@@ -69,7 +69,12 @@ public class ReposFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        refreshLayout.setRefreshing(true);
+        refreshLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                refreshLayout.setRefreshing(true);;
+            }
+        });
         ((ReposActionListener) getActivity()).onRepoViewCreated();
     }
 
@@ -131,8 +136,13 @@ public class ReposFragment extends Fragment {
     }
 
     public void displayRepos(List<MyRepos.RepoInfo> repoInfoList) {
+        refreshLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                refreshLayout.setRefreshing(false);;
+            }
+        });
         reposAdapter.setRepoInfoList(repoInfoList);
         reposAdapter.notifyDataSetChanged();
-        refreshLayout.setRefreshing(false);
     }
 }

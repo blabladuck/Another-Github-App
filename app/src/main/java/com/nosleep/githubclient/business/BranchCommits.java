@@ -11,8 +11,11 @@ import android.support.v4.content.Loader;
 import android.util.Log;
 
 import com.android.volley.VolleyError;
+import com.nosleep.githubclient.datalayer.services.commits.Author_;
 import com.nosleep.githubclient.datalayer.services.commits.Commit;
+import com.nosleep.githubclient.datalayer.services.commits.Commit_;
 import com.nosleep.githubclient.datalayer.services.commits.CommitsSvcInterface;
+import com.nosleep.githubclient.datalayer.services.commits.Committer_;
 import com.nosleep.githubclient.datalayer.storage.CommitDAO;
 import com.nosleep.githubclient.datalayer.storage.DataProviderContract;
 import com.nosleep.githubclient.datalayer.storage.InMemoryStorage;
@@ -90,14 +93,25 @@ public abstract class BranchCommits {
                     for (int i = 0; i < response.length; i++) {
                         values[i] = new ContentValues(9);
                         values[i].put(DataProviderContract.Commits.SHA, response[i].getSha());
-                        values[i].put(DataProviderContract.Commits.COMMITTER_NAME, response[i].getCommit().getCommitter().getName());
-                        values[i].put(DataProviderContract.Commits.COMMITTER_EMAIL, response[i].getCommit().getCommitter().getEmail());
-                        values[i].put(DataProviderContract.Commits.COMMIT_MESSAGE, response[i].getCommit().getMessage());
-                        values[i].put(DataProviderContract.Commits.AUTHOR_NAME, response[i].getCommit().getAuthor().getName());
-                        values[i].put(DataProviderContract.Commits.AUTHOR_EMAIL, response[i].getCommit().getAuthor().getEmail());
-                        values[i].put(DataProviderContract.Commits.COMMIT_DATE, response[i].getCommit().getCommitter().getDate());
-                        values[i].put(DataProviderContract.Commits.AUTHOR_AVATAR, response[i].getAuthor().getAvatarUrl());
-                        values[i].put(DataProviderContract.Commits.COMMITTER_EMAIL, response[i].getCommitter().getAvatarUrl());
+                        Commit_ commit_ = response[i].getCommit();
+                        if (commit_ != null) {
+                            values[i].put(DataProviderContract.Commits.COMMITTER_NAME, commit_.getCommitter().getName());
+                            values[i].put(DataProviderContract.Commits.COMMITTER_EMAIL, commit_.getCommitter().getEmail());
+                            values[i].put(DataProviderContract.Commits.COMMIT_MESSAGE, commit_.getMessage());
+                            values[i].put(DataProviderContract.Commits.AUTHOR_NAME, commit_.getAuthor().getName());
+                            values[i].put(DataProviderContract.Commits.AUTHOR_EMAIL, commit_.getAuthor().getEmail());
+                            values[i].put(DataProviderContract.Commits.COMMIT_DATE, commit_.getCommitter().getDate());
+
+                        }
+                        Author_ author_ = response[i].getAuthor();
+                        if (author_ != null) {
+                            values[i].put(DataProviderContract.Commits.AUTHOR_AVATAR, author_.getAvatarUrl());
+                        }
+                        Committer_ committer_ = response[i].getCommitter();
+                        if (committer_ != null) {
+                            values[i].put(DataProviderContract.Commits.COMMITTER_EMAIL, committer_.getAvatarUrl());
+
+                        }
                     }
                     CommitDAO dao = new CommitDAO(contentResolver);
 
