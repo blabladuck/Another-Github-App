@@ -61,10 +61,12 @@ public class HomeActivity extends MasterTemplateActivity implements HomeContract
         }
         BusinessInjector businessInjector = BusinessInjector.getInstance(this);
         Bundle bundle = new Bundle();
-        WelcomeUserFragment frag = WelcomeUserFragment.newInstance(bundle);
-        frag.registerWelcomeAnimationListener(this);
-        getSupportFragmentManager().beginTransaction().add(R.id.contentPanel, frag, "welcome").
-                commit();
+        if (savedInstanceState == null) {
+            WelcomeUserFragment frag = WelcomeUserFragment.newInstance(bundle);
+            frag.registerWelcomeAnimationListener(this);
+            getSupportFragmentManager().beginTransaction().add(R.id.contentPanel, frag, "welcome").
+                    commitAllowingStateLoss();
+        }
         userAction = new HomePresenter(this, businessInjector.getUserProfile(), businessInjector.getReposBusiness());
         userAction.getUser();
     }
@@ -86,9 +88,11 @@ public class HomeActivity extends MasterTemplateActivity implements HomeContract
     public void showWelcomeScreen(String username, String avatar) {
         Log.d(TAG, "avatar = " + avatar);
         txtusername.setText(username);
-        Glide.with(this).load(avatar).transform(new CircleTransform(this)).into(profilepic);
+        Glide.with(getApplicationContext()).load(avatar).transform(new CircleTransform(this)).into(profilepic);
         WelcomeUserFragment welcomeUserFragment = (WelcomeUserFragment) getSupportFragmentManager().findFragmentByTag("welcome");
-        welcomeUserFragment.displayWelcome(username, avatar);
+        if(welcomeUserFragment!=null){
+            welcomeUserFragment.displayWelcome(username, avatar);
+        }
     }
 
     @Override

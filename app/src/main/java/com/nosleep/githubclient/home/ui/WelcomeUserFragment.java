@@ -1,6 +1,7 @@
 package com.nosleep.githubclient.home.ui;
 
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -32,7 +33,7 @@ public class WelcomeUserFragment extends Fragment {
     private TextView txtusername;
 
     public void displayWelcome(final String username, final String avatarurl) {
-        Glide.with(this).load(avatarurl).transform(new CircleTransform(getContext())).into(avatar);
+        Glide.with(getActivity().getApplicationContext()).load(avatarurl).transform(new CircleTransform(getContext())).into(avatar);
         txtusername.setText("Welcome! " + username);
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
@@ -43,6 +44,18 @@ public class WelcomeUserFragment extends Fragment {
         }, 4000);
     }
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
+
+    }
 
     public interface onWelcomeAnimationListener {
         void onWelcomeAnimationComplete(String avatarurl);

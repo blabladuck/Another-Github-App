@@ -1,6 +1,7 @@
 package com.nosleep.githubclient.home.ui;
 
 import android.content.Context;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -35,6 +36,7 @@ public class ReposFragment extends Fragment {
     }
 
     private SwipeRefreshLayout refreshLayout;
+
     private RecyclerView recyclerView;
 
     public static final ReposFragment newInstance(Bundle args) {
@@ -43,6 +45,11 @@ public class ReposFragment extends Fragment {
         return fragment;
     }
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setRetainInstance(true);
+    }
 
     @Nullable
     @Override
@@ -72,11 +79,12 @@ public class ReposFragment extends Fragment {
         refreshLayout.post(new Runnable() {
             @Override
             public void run() {
-                refreshLayout.setRefreshing(true);;
+                refreshLayout.setRefreshing(true);
             }
         });
         ((ReposActionListener) getActivity()).onRepoViewCreated();
     }
+
 
     private static class ReposAdapter extends RecyclerView.Adapter<ReposAdapter.ViewHolder> {
         private List<MyRepos.RepoInfo> repoInfoList;
@@ -139,7 +147,8 @@ public class ReposFragment extends Fragment {
         refreshLayout.post(new Runnable() {
             @Override
             public void run() {
-                refreshLayout.setRefreshing(false);;
+                refreshLayout.setRefreshing(false);
+                ;
             }
         });
         reposAdapter.setRepoInfoList(repoInfoList);
