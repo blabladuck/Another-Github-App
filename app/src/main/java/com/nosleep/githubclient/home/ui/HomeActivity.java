@@ -124,7 +124,7 @@ public class HomeActivity extends MasterTemplateActivity implements HomeContract
     public void onWelcomeAnimationComplete(String avatarurl) {
         Bundle bundle = new Bundle();
         getSupportFragmentManager().beginTransaction().replace(R.id.contentPanel, ReposFragment.newInstance(bundle), "repos").
-                commit();
+                commitAllowingStateLoss();
     }
 
     @Override

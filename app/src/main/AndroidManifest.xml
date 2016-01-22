@@ -25,21 +25,10 @@
             android:theme="@style/AppTheme.OverlapSystemBar" />
         <activity
             android:name=".commits.ui.CommitsActivity"
-            android:parentActivityName=".home.ui.HomeActivity"
-            android:theme="@style/AppTheme.OverlapSystemBar">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".home.ui.HomeActivity" />
-        </activity>
+            android:theme="@style/AppTheme.OverlapSystemBar"></activity>
         <activity
             android:name=".branches.ui.BranchesActivity"
-            android:parentActivityName=".home.ui.HomeActivity"
-            android:theme="@style/AppTheme.OverlapSystemBar">
-
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".home.ui.HomeActivity" />
-        </activity>
+            android:theme="@style/AppTheme.OverlapSystemBar"></activity>
 
         <provider
             android:name=".datalayer.storage.DataProvider"

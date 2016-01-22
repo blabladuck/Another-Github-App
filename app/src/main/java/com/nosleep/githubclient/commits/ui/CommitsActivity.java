@@ -30,12 +30,12 @@ public class CommitsActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         ActionBar ab = getSupportActionBar();
         ab.setDisplayHomeAsUpEnabled(true);
-        BranchCommits branchCommits = BusinessInjector.getInstance(this).getBranchCommits(this,getSupportLoaderManager());
+        BranchCommits branchCommits = BusinessInjector.getInstance(this).getBranchCommits(this, getSupportLoaderManager());
         Intent intent = getIntent();
         String repo = intent.getStringExtra(EXTRA_REPO);
         String owner = intent.getStringExtra(EXTRA_OWNER);
         String branch = intent.getStringExtra(EXTRA_BRANCH);
-        branchCommits.getCommits(repo,branch,owner,null,new BranchCommits.CommitsLoadCallback(){
+        branchCommits.getCommits(repo, branch, owner, null, new BranchCommits.CommitsLoadCallback() {
 
             @Override
             public void onLoadCommits(int loadStatus, BranchCommits.CommitData[] info) {
@@ -46,6 +46,9 @@ public class CommitsActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            onBackPressed();
+        }
         return super.onOptionsItemSelected(item);
     }
 }
