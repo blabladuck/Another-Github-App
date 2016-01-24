@@ -1,11 +1,16 @@
 package com.nosleep.githubclient.business;
 
 
+import android.annotation.SuppressLint;
+import android.content.AsyncQueryHandler;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.ContentObserver;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.util.Log;
@@ -17,6 +22,7 @@ import com.nosleep.githubclient.datalayer.services.commits.Commit_;
 import com.nosleep.githubclient.datalayer.services.commits.CommitsSvcInterface;
 import com.nosleep.githubclient.datalayer.services.commits.Committer_;
 import com.nosleep.githubclient.datalayer.storage.CommitDAO;
+import com.nosleep.githubclient.datalayer.storage.DataProvider;
 import com.nosleep.githubclient.datalayer.storage.DataProviderContract;
 import com.nosleep.githubclient.datalayer.storage.InMemoryStorage;
 import com.nosleep.githubclient.utils.ServiceListener;
@@ -41,7 +47,7 @@ public abstract class BranchCommits {
         public final String message;
         public final Calendar commitdate;
 
-        public CommitData(int id, String sha, String author, String authorEmail, String committer, String committerEmail, String authorAvatar, String committerAvatar, String message, Calendar commitdate) {
+        public CommitData(int id, String sha, String author, String authorEmail, String authorAvatar, String committer, String committerEmail, String committerAvatar, String message, Calendar commitdate) {
             this.id = id;
             this.sha = sha;
             this.author = author;
@@ -61,27 +67,101 @@ public abstract class BranchCommits {
 
     public abstract void getCommits(String repo, String branch, String owner, Calendar since, CommitsLoadCallback callback);
 
-    static class BranchCommitsImpl extends BranchCommits implements LoaderManager.LoaderCallbacks<Cursor> {
+    static class BranchCommitsImpl extends BranchCommits {
         private static final String TAG = "BranchCommits";
 
-        private final LoaderManager loaderManager;
         CommitsSvcInterface commitsSvcInterface;
         InMemoryStorage inMemoryStorage;
         ContentResolver contentResolver;
         WeakReference<CommitsLoadCallback> weakCallback;
+        private CommitData[] commitData;
+        private ContentObserver dbObserver;
+        private AsyncQueryHandler queryHandler;
 
         BranchCommitsImpl(Context appContext, LoaderManager loaderManager, CommitsSvcInterface commitsSvcInterface,
                           InMemoryStorage inMemoryStorage) {
             this.contentResolver = appContext.getContentResolver();
             this.commitsSvcInterface = commitsSvcInterface;
             this.inMemoryStorage = inMemoryStorage;
-            this.loaderManager = loaderManager;
+            this.dbObserver = new ContentObserver(new Handler(appContext.getMainLooper())) {
+                @Override
+                public boolean deliverSelfNotifications() {
+                    return super.deliverSelfNotifications();
+                }
+
+                @Override
+                public void onChange(boolean selfChange) {
+                    Log.d(TAG, "onChange");
+                    commitData = null;
+                    queryHandler.startQuery(2, null, DataProviderContract.Commits.CONTENT_URI, null, null, null, null);
+                }
+
+                @Override
+                public void onChange(boolean selfChange, Uri uri) {
+                    Log.d(TAG, "onChange = " + uri);
+                    commitData = null;
+                    queryHandler.startQuery(2, null, DataProviderContract.Commits.CONTENT_URI, null, null, null, null);
+                }
+            };
+            contentResolver.registerContentObserver(DataProviderContract.Commits.CONTENT_URI_ALL, false, dbObserver);
+
         }
 
+        @SuppressLint("Handlerleak")
         @Override
-        public void getCommits(String repo, String branch, String owner, Calendar since, CommitsLoadCallback callback) {
+        public void getCommits(final String repo, final String branch, final String owner, final Calendar since, CommitsLoadCallback callback) {
+            if (commitData != null) {
+                callback.onLoadCommits(0, commitData);
+                return;
+            }
             weakCallback = new WeakReference<>(callback);
-            loaderManager.initLoader(0, null, this);
+            queryHandler = new AsyncQueryHandler(contentResolver) {
+                @Override
+                protected void onQueryComplete(int token, Object cookie, Cursor cursor) {
+
+                    if (cursor != null && cursor.getCount() > 0) {
+                        int column_id = cursor.getColumnIndex(DataProviderContract.Commits._ID);
+                        int column_sha = cursor.getColumnIndex(DataProviderContract.Commits.SHA);
+                        int column_author_name = cursor.getColumnIndex(DataProviderContract.Commits.AUTHOR_NAME);
+                        int column_committer_name = cursor.getColumnIndex(DataProviderContract.Commits.COMMITTER_NAME);
+                        int column_author_email = cursor.getColumnIndex(DataProviderContract.Commits.AUTHOR_EMAIL);
+                        int column_committer_email = cursor.getColumnIndex(DataProviderContract.Commits.COMMITTER_EMAIL);
+                        int column_author_avatar = cursor.getColumnIndex(DataProviderContract.Commits.AUTHOR_AVATAR);
+                        int column_committer_avatar = cursor.getColumnIndex(DataProviderContract.Commits.COMMITTER_AVATAR);
+                        int column_committer_message = cursor.getColumnIndex(DataProviderContract.Commits.COMMIT_MESSAGE);
+                        int column_commit_date = cursor.getColumnIndex(DataProviderContract.Commits.COMMIT_DATE);
+                        cursor.moveToFirst();
+                        BranchCommitsImpl.this.commitData = new CommitData[cursor.getCount()];
+                        for (CommitData data : commitData) {
+                            data = new CommitData(cursor.getInt(column_id)
+                                    , cursor.getString(column_sha)
+                                    , cursor.getString(column_author_name)
+                                    , cursor.getString(column_author_email)
+                                    , cursor.getString(column_author_avatar)
+                                    , cursor.getString(column_committer_name)
+                                    , cursor.getString(column_committer_email)
+                                    , cursor.getString(column_committer_avatar)
+                                    , cursor.getString(column_committer_message)
+                                    , null);
+                            //,cursor.getString(column_commit_date))))
+                        }
+
+                        if (weakCallback != null && weakCallback.get() != null) {
+                            weakCallback.get().onLoadCommits(0, commitData);
+                        }
+                    } else {
+                        refreshFromNetwork(repo, branch, owner, since);
+                    }
+
+                }
+            };
+
+            queryHandler.startQuery(1, null, DataProviderContract.Commits.CONTENT_URI, null, null, null, null);
+
+
+        }
+
+        private void refreshFromNetwork(String repo, String branch, String owner, Calendar since) {
             String token = inMemoryStorage.getBasicAuthHeaderValue();
             Log.d(TAG, "getCommits() repo = " + repo + " branch = " + branch + "owner = " + owner);
             commitsSvcInterface.getCommits(token, repo, branch, owner, new ServiceListener<Commit[]>() {
@@ -93,6 +173,7 @@ public abstract class BranchCommits {
                     for (int i = 0; i < response.length; i++) {
                         values[i] = new ContentValues(9);
                         values[i].put(DataProviderContract.Commits.SHA, response[i].getSha());
+                        Log.d(TAG, "sha" + response[i].getSha());
                         Commit_ commit_ = response[i].getCommit();
                         if (commit_ != null) {
                             values[i].put(DataProviderContract.Commits.COMMITTER_NAME, commit_.getCommitter().getName());
@@ -101,7 +182,6 @@ public abstract class BranchCommits {
                             values[i].put(DataProviderContract.Commits.AUTHOR_NAME, commit_.getAuthor().getName());
                             values[i].put(DataProviderContract.Commits.AUTHOR_EMAIL, commit_.getAuthor().getEmail());
                             values[i].put(DataProviderContract.Commits.COMMIT_DATE, commit_.getCommitter().getDate());
-
                         }
                         Author_ author_ = response[i].getAuthor();
                         if (author_ != null) {
@@ -125,21 +205,8 @@ public abstract class BranchCommits {
             });
         }
 
-        @Override
-        public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-            return null;
-        }
-
-        @Override
-        public void onLoadFinished(android.support.v4.content.Loader<Cursor> loader, Cursor data) {
-
-        }
-
-        @Override
-        public void onLoaderReset(android.support.v4.content.Loader<Cursor> loader) {
-
-        }
-
     }
+
+
 }
 

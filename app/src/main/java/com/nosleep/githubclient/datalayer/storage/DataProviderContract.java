@@ -21,6 +21,7 @@ public class DataProviderContract {
         private static final String PATH_COMMIT_ID = "/commits/";
 
         public static final Uri CONTENT_URI = Uri.parse(SCHEME + AUTHORITY + PATH_COMMITS);
+        public static final Uri CONTENT_URI_ALL = Uri.parse(SCHEME + AUTHORITY + PATH_COMMITS+"/*");
         public static final Uri CONTENT_ID_URI_BASE
                 = Uri.parse(SCHEME + AUTHORITY + PATH_COMMIT_ID);
 
@@ -37,7 +38,7 @@ public class DataProviderContract {
         public static final String COMMIT_DATE = "COMMIT_DATE";
         public static final String AUTHOR_AVATAR = "AUTHOR_AVATAR";
         public static final String COMMITTER_AVATAR = "COMMITTER_AVATAR";
-        public static final String DEFAULT_SORT_ORDER = "modified DESC";
+        public static final String DEFAULT_SORT_ORDER = "COMMIT_DATE DESC";
         public static final int COMMIT_ID_PATH_POSITON = 1;
     }
 

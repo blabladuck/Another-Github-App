@@ -26,19 +26,19 @@ public class DataProvider extends ContentProvider {
 
     static {
         urimatcher = new UriMatcher(UriMatcher.NO_MATCH);
-        urimatcher.addURI(DataProviderContract.AUTHORITY, "commits", COMMITS);
-        urimatcher.addURI(DataProviderContract.AUTHORITY, "commits", COMMIT_ID);
+        urimatcher.addURI(DataProviderContract.AUTHORITY, "commits/", COMMITS);
+        urimatcher.addURI(DataProviderContract.AUTHORITY, "commits/#", COMMIT_ID);
         commitsProjectionMap = new HashMap<>();
-        commitsProjectionMap.put(DataProviderContract.Commits.AUTHOR_EMAIL, "contactauthor");
-        commitsProjectionMap.put(DataProviderContract.Commits.AUTHOR_NAME, "author");
-        commitsProjectionMap.put(DataProviderContract.Commits.COMMIT_DATE, "commitdate");
-        commitsProjectionMap.put(DataProviderContract.Commits.COMMIT_MESSAGE, "commitmessage");
-        commitsProjectionMap.put(DataProviderContract.Commits.COMMITTER_EMAIL, "contactcommitter");
-        commitsProjectionMap.put(DataProviderContract.Commits.COMMITTER_NAME, "committer");
-        commitsProjectionMap.put(DataProviderContract.Commits.COMMITTER_AVATAR, "committeravatar");
-        commitsProjectionMap.put(DataProviderContract.Commits.AUTHOR_AVATAR, "authoravatar");
-        commitsProjectionMap.put(DataProviderContract.Commits.SHA, "sha");
-        commitsProjectionMap.put(DataProviderContract.Commits._ID, "id");
+        commitsProjectionMap.put(DataProviderContract.Commits.AUTHOR_EMAIL, DataProviderContract.Commits.AUTHOR_EMAIL);
+        commitsProjectionMap.put(DataProviderContract.Commits.AUTHOR_NAME, DataProviderContract.Commits.AUTHOR_NAME);
+        commitsProjectionMap.put(DataProviderContract.Commits.COMMIT_DATE, DataProviderContract.Commits.COMMIT_DATE);
+        commitsProjectionMap.put(DataProviderContract.Commits.COMMIT_MESSAGE, DataProviderContract.Commits.COMMIT_MESSAGE);
+        commitsProjectionMap.put(DataProviderContract.Commits.COMMITTER_EMAIL, DataProviderContract.Commits.COMMITTER_EMAIL);
+        commitsProjectionMap.put(DataProviderContract.Commits.COMMITTER_NAME, DataProviderContract.Commits.COMMITTER_NAME);
+        commitsProjectionMap.put(DataProviderContract.Commits.COMMITTER_AVATAR, DataProviderContract.Commits.COMMITTER_AVATAR);
+        commitsProjectionMap.put(DataProviderContract.Commits.AUTHOR_AVATAR, DataProviderContract.Commits.AUTHOR_AVATAR);
+        commitsProjectionMap.put(DataProviderContract.Commits.SHA, DataProviderContract.Commits.SHA);
+        commitsProjectionMap.put(DataProviderContract.Commits._ID, DataProviderContract.Commits._ID);
     }
 
 
@@ -187,5 +187,21 @@ public class DataProvider extends ContentProvider {
         }
         getContext().getContentResolver().notifyChange(uri, null);
         return count;
+    }
+
+    @Override
+    public int bulkInsert(Uri uri, ContentValues[] values) {
+        SQLiteDatabase db = commitsSQLiteHelper.getWritableDatabase();
+        try {
+            db.beginTransaction();
+            for (ContentValues values1 : values) {
+                db.insert(DataProviderContract.Commits.TABLE_NAME, null, values1);
+            }
+            db.setTransactionSuccessful();
+            getContext().getContentResolver().notifyChange(DataProviderContract.Commits.CONTENT_URI, null);
+        } finally {
+            db.endTransaction();
+        }
+        return super.bulkInsert(uri, values);
     }
 }

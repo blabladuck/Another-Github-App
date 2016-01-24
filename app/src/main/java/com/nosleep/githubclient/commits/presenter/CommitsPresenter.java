@@ -1,5 +1,7 @@
 package com.nosleep.githubclient.commits.presenter;
 
+import android.util.Log;
+
 import com.nosleep.githubclient.business.BranchCommits;
 import com.nosleep.githubclient.business.MyRepos;
 import com.nosleep.githubclient.business.UserProfile;
@@ -12,6 +14,7 @@ import java.util.List;
  * Created by Sanjeev on 09/01/16.
  */
 public class CommitsPresenter implements CommitsContract.UserAction, BranchCommits.CommitsLoadCallback {
+    private static final String TAG = "CommitsPresenter";
     private CommitsContract.CommitsView view;
     private BranchCommits branchCommits;
 
@@ -23,12 +26,13 @@ public class CommitsPresenter implements CommitsContract.UserAction, BranchCommi
 
     @Override
     public void onLoadCommits(int loadStatus, BranchCommits.CommitData[] info) {
+        Log.d(TAG, "size = " + info.length);
         view.showCommitsDataScreen(info);
     }
 
     @Override
     public void getCommits(String repo, String branch, String owner) {
         view.showBusyInQueryScreen();
-        branchCommits.getCommits(repo,branch,owner,null,this);
+        branchCommits.getCommits(repo, branch, owner, null, this);
     }
 }

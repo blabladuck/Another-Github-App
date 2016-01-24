@@ -24,16 +24,16 @@ class CommitsSQLiteHelper extends SQLiteOpenHelper {
     }
 
     private final String CREATE_COMMIT_TABLE = "CREATE TABLE IF NOT EXISTS " + DataProviderContract.Commits.TABLE_NAME + " (\n" +
-            "\t`id`\tINTEGER PRIMARY KEY AUTOINCREMENT,\n" +
-            "\t`sha`\tTEXT UNIQUE,\n" +
-            "\t`author`\tTEXT,\n" +
-            "\t`contactauthor`\tTEXT,\n" +
-            "\t`authoravatar`\tBLOB,\n" +
-            "\t`committer`\tTEXT,\n" +
-            "\t`contactcommitter`\tTEXT,\n" +
-            "\t`committeravatar`\tBLOB,\n" +
-            "\t`commitmessage`\tTEXT,\n" +
-            "\t`commitdate`\tTEXT\n" +
+            "\t`" + DataProviderContract.Commits._ID + "`\tINTEGER PRIMARY KEY AUTOINCREMENT,\n" +
+            "\t`" + DataProviderContract.Commits.SHA + "`\tTEXT,\n" +
+            "\t`" + DataProviderContract.Commits.AUTHOR_NAME + "`\tTEXT,\n" +
+            "\t`" + DataProviderContract.Commits.AUTHOR_EMAIL + "`\tTEXT,\n" +
+            "\t`" + DataProviderContract.Commits.AUTHOR_AVATAR + "`\tBLOB,\n" +
+            "\t`" + DataProviderContract.Commits.COMMITTER_NAME + "`\tTEXT,\n" +
+            "\t`" + DataProviderContract.Commits.COMMITTER_EMAIL + "`\tTEXT,\n" +
+            "\t`" + DataProviderContract.Commits.COMMITTER_AVATAR + "`\tBLOB,\n" +
+            "\t`" + DataProviderContract.Commits.COMMIT_MESSAGE + "`\tTEXT,\n" +
+            "\t`" + DataProviderContract.Commits.COMMIT_DATE + "`\tTEXT\n" +
             ");";
 
     private final String DELETE_COMMIT_TABLE = "DROP TABLE IF EXISTS " + DataProviderContract.Commits.TABLE_NAME + "";
